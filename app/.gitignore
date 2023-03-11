@@ -1,13 +1,3 @@
-# Compiler files
-cache/
-out/
-
-# Ignores development broadcast logs
-!/broadcast
-/broadcast/*
-/broadcast/*/31337/
-.env
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
