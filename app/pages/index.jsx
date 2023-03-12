@@ -1,8 +1,8 @@
 import { useEffect, useState, React } from 'react'
 import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
-import { CheckIcon, CheckCircleIcon } from '@heroicons/react/20/solid'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, plugins } from 'chart.js';
+import { Assets } from "components/dashboard/assets";
+import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement);
@@ -37,6 +37,7 @@ export const pieData = {
 };
 
 export const pieOptions = {
+  cutout: '90%',
   plugins: {
     legend: {
       display: false
@@ -61,16 +62,16 @@ export const piePlugins = [{
     ctx.textAlign = 'left';
 
     ///////////// TEXT 1 /////////////
-    ctx.font = (height / 640).toFixed(2) + "em sans-serif";
-    ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY);
+    ctx.font = "1rem Segoe UI";
+    ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - 55);
 
     ///////////// TEXT 2 /////////////
-    ctx.font = (height / 320).toFixed(2) + "em sans-serif";
-    ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 50);
+    ctx.font = "bold 3rem Segoe UI";
+    ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
 
     ///////////// TEXT 3 /////////////
-    ctx.font = (height / 640).toFixed(2) + "em sans-serif";
-    ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY - 100);
+    ctx.font = "1rem Segoe UI";
+    ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + 30);
 
     ctx.save();
   } 
@@ -79,7 +80,7 @@ export const piePlugins = [{
 export function Content({ factoryAddress }) {
   return (
     <div className="px-4 py-4 sm:px-6 lg:px-8 bg-base-300 mb-2">
-      <div className="hero my-5 w-full">
+      <div className="w-full">
 
         <div className="navbar">
           <div className="navbar-start">
@@ -95,61 +96,17 @@ export function Content({ factoryAddress }) {
           </div>
         </div>
 
-        <div className="hero-content contents">
-          <div>
-            <div className="bg-white">
-              <div className="mx-auto max-w-7xl">
-                <div className="mx-auto max-w-2xl rounded-3xl ring-1 ring-gray-200 lg:mx-0 lg:flex lg:max-w-none">
-                  <div className="p-8 sm:p-10 lg:flex-auto">
-                    <p className="mt-6 text-base leading-7 text-gray-600">
-                      Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis blanditiis
-                      repellendus etur quidem assumenda.
-                    </p>
-                    <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
-                  </div>
-
-                  <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-                    <div className="rounded-2xl bg-gray-50 py-10 ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
-                      <div className="mx-auto max-w-xs px-8">
-                        <p className="text-base font-semibold text-gray-600">Staked assets (60.2%)</p>
-                        <p className="mt-2 flex items-baseline justify-center gap-x-2">
-                          <span className="text-5xl font-bold tracking-tight text-gray-900">$58,656</span>
-                        </p>
-
-                        <p className="mt-3 text-sm leading-6 text-gray-500">APR 6.67 | Yearly Yield $3,918</p>
-                        
-                        <div className="mt-3 relative">
-                          <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                            <div className="w-full border-t border-gray-300" />
-                          </div>
-                        </div>
-
-                        <ul role="list" className="mt-6 space-y-3 text-sm leading-6 text-gray-600">
-                          {stakedAssets.map((asset, assetIdx) => (
-                            <li key="5 products" className="flex gap-x-3">
-                              {/* <CheckCircleIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" /> */}
-
-                              <div className="avatar">
-                                <div className="w-8 rounded-full">
-                                  <img src={asset.image} />
-                                </div>
-                              </div>
-
-                              <div>
-                                <p className="flex items-baseline">
-                                  <span className="text-sm font-bold tracking-tight text-gray-900">{asset.amount} {asset.symbol}</span>
-                                </p>
-                                <p className="text-sm leading-6 text-gray-500">{asset.amountUSD} | {asset.percentage}</p>
-                              </div>
-
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        <div className="contents">
+          <div className="rounded-3xl bg-white mx-auto w-full">
+            <div className="ring-1 ring-gray-200 lg:mx-0 lg:flex lg:max-w-none">
+              
+              <div class="py-8 mx-auto max-h-96">
+                <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
               </div>
+
+              <Assets title='Staked Assets (60.2%)' amount='$58,656' APR='6.67%' textYield='Yearly Yield $3,918' assets={stakedAssets} />
+
+              <Assets title='Available to stake (38.8%)' amount='$16,520' APR='7.05%' textYield='Potential Yield $2,911' assets={stakedAssets} />
             </div>
           </div>
         </div>
