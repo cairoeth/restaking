@@ -1,7 +1,9 @@
 import { useEffect, useState, React } from 'react'
 import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
+import { Footer } from 'components/ui/footer'
 import { Assets } from "components/dashboard/assets";
+import { Stake } from "components/dashboard/stake";
 import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
@@ -80,7 +82,8 @@ export const piePlugins = [{
 export function Content({ factoryAddress }) {
   return (
     <div className="px-4 py-4 sm:px-6 lg:px-8 bg-base-300 mb-2">
-      <div className="w-full">
+      {/* PORTFOLIO SUMMARY */}
+      <div className="ml-20 w-11/12">
 
         <div className="navbar">
           <div className="navbar-start">
@@ -112,6 +115,12 @@ export function Content({ factoryAddress }) {
         </div>
         
       </div>
+
+      {/* STAKED ASSETS - ENROLLED */}
+      <Stake title='Stake enrolled' />
+
+      {/* STAKED ASSETS - DELEGATED */}
+      <Stake title='Stake delegated' />
     </div>
   )
 }
@@ -129,6 +138,7 @@ export default function App() {
     <Page>
       <Navbar />
       <Content factoryAddress={factoryAddress} />
+      <Footer />
     </Page>
   );
 };

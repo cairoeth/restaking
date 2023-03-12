@@ -1,5 +1,3 @@
-import dynamic from "next/dynamic";
-
 export function Assets({ title, amount, APR, textYield, assets }) {
   return (
     <div className="p-2">
