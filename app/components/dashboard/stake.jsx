@@ -4,7 +4,7 @@ export function Stake({ title }) {
             <div className="navbar">
                 <div className="navbar-start">
                     <p className="mt-2 flex items-baseline gap-x-2">
-                        <span className="text-3xl font-bold tracking-tight text-black">Stake enrolled</span>
+                        <span className="text-3xl font-bold tracking-tight text-black">{title}</span>
                     </p>
                 </div>
 
