@@ -6,10 +6,9 @@ import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
 ChartJS.register(ArcElement);
 
 export const pieData = {
-    labels: ['Blue'],
     datasets: [
       {
-        data: [100],
+        data: [70, 30],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -66,30 +65,42 @@ export const piePlugins = [{
 
 const stakedAssets = [
     {
-      symbol: 'ETH',
+      symbol: 'ANKR',
       address: '0x000000000',
       image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
-      amount: '17.36',
-      amountUSD: '$25,500',
-      percentage: '60.2%',
+      amount: '818,094.32',
+      amountUSD: '13,455',
+      percentage: '26.2',
+      bgColorClass: 'bg-pink-600',
     },
     {
         symbol: 'ETH',
         address: '0x000000000',
         image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
-        amount: '17.36',
-        amountUSD: '$25,500',
-        percentage: '60.2%',
+        amount: '9.7188',
+        amountUSD: '13,455',
+        percentage: '13.8',
+        bgColorClass: 'bg-[#50d71e]',
       },
       {
-        symbol: 'ETH',
+        symbol: 'MATIC',
         address: '0x000000000',
         image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
-        amount: '17.36',
-        amountUSD: '$25,500',
-        percentage: '60.2%',
+        amount: '14,358.1244',
+        amountUSD: '11,200',
+        percentage: '11.5',
+        bgColorClass: 'bg-[#50d71e]',
       },
-  ]
+      {
+        symbol: 'BNB',
+        address: '0x000000000',
+        image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
+        amount: '29.9998',
+        amountUSD: '8,500',
+        percentage: '8.7',
+        bgColorClass: 'bg-[#50d71e]',
+      },
+]
 
 export function Portfolio() {
     return (
