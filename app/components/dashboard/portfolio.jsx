@@ -36,32 +36,32 @@ plugins: {
 };
 
 export const piePlugins = [{
-beforeDraw: function(chart) {
-    var width = chart.width,
-    height = chart.height,
-    ctx = chart.ctx;
-    ctx.restore();
+    beforeDraw: function(chart) {
+        var width = chart.width,
+        height = chart.height,
+        ctx = chart.ctx;
+        ctx.restore();
 
-    var text1 = "Total assets"
-    var text2 = "$97,242"
-    var text3 = "APR 4.02%"
-    var textY = height / 1.75;
-    ctx.textAlign = 'left';
+        var text1 = "Total assets"
+        var text2 = "$97,242"
+        var text3 = "APR 4.02%"
+        var textY = height / 1.75;
+        ctx.textAlign = 'left';
 
-    ///////////// TEXT 1 /////////////
-    ctx.font = "1rem Segoe UI";
-    ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - 55);
+        ///////////// TEXT 1 /////////////
+        ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
+        ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
 
-    ///////////// TEXT 2 /////////////
-    ctx.font = "bold 3rem Segoe UI";
-    ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
+        ///////////// TEXT 2 /////////////
+        ctx.font = "bold " + (height / 100).toFixed(2) + "rem Segoe UI";
+        ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
 
-    ///////////// TEXT 3 /////////////
-    ctx.font = "1rem Segoe UI";
-    ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + 30);
+        ///////////// TEXT 3 /////////////
+        ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
+        ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
 
-    ctx.save();
-} 
+        ctx.save();
+    } 
 }]
 
 const stakedAssets = [
@@ -101,10 +101,8 @@ export function Portfolio() {
                 </h2>
                 <div className="overflow-x-auto max-h-min pb-8">
                     <div class="grid grid-cols-4 gap-4">
-                        <div class="col-span-2">
-                            <div class="mx-auto max-h-44">
-                                <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
-                            </div>
+                        <div class="col-span-2 max-h-[90%] place-self-center">
+                            <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
                         </div>
                         <div>
                             <Assets title='Staked Assets (60.2%)' amount='$58,656' APR='6.67%' textYield='Yearly Yield $3,918' assets={stakedAssets} />
