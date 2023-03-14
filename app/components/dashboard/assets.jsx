@@ -1,8 +1,6 @@
 export function Assets({ title, amount, APR, textYield, assets }) {
   return (
-    <div className="p-2">
-    <div className="w-96 rounded-2xl bg-gray-50 ring-1 ring-inset ring-gray-900/5 flex flex-col justify-center py-8">
-      <div className="px-8">
+    <div className="w-84 flex flex-col justify-center">
         <p className="text-base font-semibold text-gray-600">{title}</p>
         <p className="mt-2 flex items-baseline gap-x-2">
           <span className="text-5xl font-bold tracking-tight text-gray-900">{amount}</span>
@@ -37,8 +35,6 @@ export function Assets({ title, amount, APR, textYield, assets }) {
             </li>
           ))}
         </ul>
-      </div>
     </div>
-  </div>
   )
 }
