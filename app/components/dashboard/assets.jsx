@@ -1,7 +1,3 @@
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export function Assets({ title, amount, APR, textYield, assets }) {
   return (
     <div className="w-84 flex flex-col justify-center">
@@ -22,7 +18,8 @@ export function Assets({ title, amount, APR, textYield, assets }) {
           {assets.map((asset, assetIdx) => (
             <li key={assetIdx} className="flex gap-x-3">
               <span
-                className={classNames(asset.bgColorClass, 'mt-4 h-2.5 w-2.5 flex-shrink-0 rounded-full')}
+                className='mt-4 h-2.5 w-2.5 flex-shrink-0 rounded-full'
+                style={{ backgroundColor: asset.color }}
                 aria-hidden="true"
               />
 

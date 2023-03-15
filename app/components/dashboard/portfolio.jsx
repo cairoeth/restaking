@@ -81,7 +81,7 @@ export function Portfolio() {
       amount: '818,094.32',
       amountUSD: '25,500',
       percentage: '26.2',
-      bgColorClass: '',
+      color: '',
     },
     {
       symbol: 'ETH',
@@ -90,7 +90,7 @@ export function Portfolio() {
       amount: '9.7188',
       amountUSD: '13,455',
       percentage: '13.8',
-      bgColorClass: '',
+      color: '',
     },
     {
       symbol: 'MATIC',
@@ -99,7 +99,7 @@ export function Portfolio() {
       amount: '14,358.1244',
       amountUSD: '11,200',
       percentage: '11.5',
-      bgColorClass: '',
+      color: '',
     },
     {
       symbol: 'BNB',
@@ -108,7 +108,7 @@ export function Portfolio() {
       amount: '29.9998',
       amountUSD: '8,500',
       percentage: '8.7',
-      bgColorClass: '',
+      color: '',
     },
   ]
 
@@ -118,14 +118,15 @@ export function Portfolio() {
 
   for (var i = 0; i < stakedAssets.length; ++i) {
     // Calculate the color of the given token
-    var hexColor = stringToColour(stakedAssets[i].address)
+    var color = hexToRgbA(stringToColour(stakedAssets[i].address))
+    console.log(color)
     // Assign color to the token legend
-    stakedAssets[i].bgColorClass = "bg-[" + hexColor + "]";
+    stakedAssets[i].color = color
 
     // Add the token percentage to the doughnut chart
     pieValues.push(stakedAssets[i].percentage)
     // Add the token color to the doughnut chart
-    pieColors.push(hexToRgbA(hexColor))
+    pieColors.push(color)
     // Subtract the token percentage from the total unstaked percentage
     pieUnstaked -= parseFloat(stakedAssets[i].percentage)
 
