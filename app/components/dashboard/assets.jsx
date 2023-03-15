@@ -1,12 +1,35 @@
-export function Assets({ title, percentage, amount, APR, textYield, assets }) {
+export function Assets({ title, percentage, worth, APR, _yield, assets }) {
   return (
     <div className="w-84 flex flex-col justify-center">
-        <p className="text-base font-semibold text-gray-600">{title} ({percentage}%)</p>
-        <p className="mt-2 flex items-baseline gap-x-2">
-          <span className="text-5xl font-bold tracking-tight text-gray-900">{amount}</span>
+        <div className="flex">
+          {title == 'Staked assets' ? 
+            <div className="isolate flex -space-x-1 overflow-hidden mt-1">
+              <span className='bg-primary place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full' aria-hidden="true"/>
+              <span className='bg-secondary place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full' aria-hidden="true"/>
+            </div> : 
+            <div className="isolate flex -space-x-1 overflow-hidden mt-1">
+              <span style={{ backgroundColor: 'rgba(189, 195, 199, 1)' }} className='place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full' aria-hidden="true"/>
+            </div>
+          }
+
+          <p className="ml-1.5 text-base font-semibold text-gray-600">{title} ({percentage}%)</p>
+        </div>
+
+        <p className="mt-1 flex items-baseline gap-x-2">
+          <span className="text-5xl font-bold tracking-tight text-gray-900">${worth}</span>
         </p>
 
-        <p className="mt-3 text-sm leading-6 text-gray-500">APR {APR} | {textYield}</p>
+        <div className="mt-2 text-sm flex justify-between">
+          <dl className="flex">
+            <dt className="text-gray-500">APR&nbsp;</dt>
+            <dd className="font-semibold text-gray-500">{APR}%&nbsp;</dd>
+
+            {title == 'Staked assets' ? 
+              <dt className="text-gray-500">| Yearly Yield&nbsp;</dt>
+              : <dt className="text-gray-500">| Potential Yield&nbsp;</dt>}
+            <dd className="font-bold text-primary">${_yield}</dd>
+          </dl>
+        </div>
         
         <div className="mt-3 relative">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -14,7 +37,7 @@ export function Assets({ title, percentage, amount, APR, textYield, assets }) {
           </div>
         </div>
 
-        <ul role="list" className="mt-6 space-y-3 text-sm leading-6 text-gray-600">
+        <ul role="list" className="mt-3 space-y-3 text-sm leading-6 text-gray-600">
           {assets.map((asset, assetIdx) => (
             <li key={assetIdx} className="flex gap-x-3">
               {title == 'Staked assets' ? 
