@@ -1,7 +1,7 @@
-export function Assets({ title, amount, APR, textYield, assets }) {
+export function Assets({ title, percentage, amount, APR, textYield, assets }) {
   return (
     <div className="w-84 flex flex-col justify-center">
-        <p className="text-base font-semibold text-gray-600">{title}</p>
+        <p className="text-base font-semibold text-gray-600">{title} ({percentage}%)</p>
         <p className="mt-2 flex items-baseline gap-x-2">
           <span className="text-5xl font-bold tracking-tight text-gray-900">{amount}</span>
         </p>
@@ -17,14 +17,15 @@ export function Assets({ title, amount, APR, textYield, assets }) {
         <ul role="list" className="mt-6 space-y-3 text-sm leading-6 text-gray-600">
           {assets.map((asset, assetIdx) => (
             <li key={assetIdx} className="flex gap-x-3">
+              {title == 'Staked assets' ? 
               <span
-                className='mt-4 h-2.5 w-2.5 flex-shrink-0 rounded-full'
+                className='place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full'
                 style={{ backgroundColor: asset.color }}
                 aria-hidden="true"
-              />
+              /> : ''}
 
               <div className="avatar">
-                <div className="w-9 rounded-full">
+                <div className="h-8 w-8 rounded-full place-self-center">
                   <img src={asset.image} />
                 </div>
               </div>

@@ -166,10 +166,10 @@ export function Portfolio() {
                           <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
                       </div>
                       <div>
-                          <Assets title='Staked Assets (60.2%)' amount='$58,656' APR='6.67%' textYield='Yearly Yield $3,918' assets={stakedAssets} />
+                          <Assets title='Staked assets' percentage='60.2' amount='$58,656' APR='6.67%' textYield='Yearly Yield $3,918' assets={stakedAssets} />
                       </div>
                       <div>
-                          <Assets title='Available to stake (38.8%)' amount='$16,520' APR='7.05%' textYield='Potential Yield $2,911' assets={stakedAssets} />
+                          <Assets title='Available to stake' percentage='38.8' amount='$16,520' APR='7.05%' textYield='Potential Yield $2,911' assets={stakedAssets} />
                       </div>
                   </div>
               </div>
