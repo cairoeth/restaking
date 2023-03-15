@@ -1,6 +1,6 @@
 import { UserIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
-import { Column } from "components/dashboard/table/column"
+import { Column } from "components/dashboard/column"
 
 export function EnrolledStake() {
     var modules = [
