@@ -20,7 +20,7 @@ export function Assets({ title, amount, APR, textYield, assets }) {
 
         <ul role="list" className="mt-6 space-y-3 text-sm leading-6 text-gray-600">
           {assets.map((asset, assetIdx) => (
-            <li key="5 products" className="flex gap-x-3">
+            <li key={assetIdx} className="flex gap-x-3">
               <span
                 className={classNames(asset.bgColorClass, 'mt-4 h-2.5 w-2.5 flex-shrink-0 rounded-full')}
                 aria-hidden="true"
