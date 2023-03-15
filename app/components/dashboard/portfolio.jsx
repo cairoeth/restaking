@@ -77,7 +77,7 @@ export function Portfolio() {
     {
       symbol: 'ANKR',
       address: '0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4',
-      image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
+      image: '',
       amount: '818,094.32',
       amountUSD: '25,500',
       percentage: '26.2',
@@ -86,7 +86,7 @@ export function Portfolio() {
     {
       symbol: 'ETH',
       address: '0x0000000000000000000000000000000000000000',
-      image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
+      image: '',
       amount: '9.7188',
       amountUSD: '13,455',
       percentage: '13.8',
@@ -95,7 +95,7 @@ export function Portfolio() {
     {
       symbol: 'MATIC',
       address: '0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0',
-      image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
+      image: '',
       amount: '14,358.1244',
       amountUSD: '11,200',
       percentage: '11.5',
@@ -104,7 +104,7 @@ export function Portfolio() {
     {
       symbol: 'BNB',
       address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      image: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0000000000085d4780B73119b644AE5ecd22b376/logo.png',
+      image: '',
       amount: '29.9998',
       amountUSD: '8,500',
       percentage: '8.7',
@@ -128,6 +128,13 @@ export function Portfolio() {
     pieColors.push(hexToRgbA(hexColor))
     // Subtract the token percentage from the total unstaked percentage
     pieUnstaked -= parseFloat(stakedAssets[i].percentage)
+
+    // Add token image
+    if (stakedAssets[i].address == '0x0000000000000000000000000000000000000000') {
+      stakedAssets[i].image = 'https://etherscan.io/images/main/empty-token.png'
+    } else {
+      stakedAssets[i].image = "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/" + stakedAssets[i].address + "/logo.png"
+    }
   }
 
   // Add unstaked percentage
