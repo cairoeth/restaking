@@ -1,6 +1,7 @@
 import { UserGroupIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
 import { Column } from "components/dashboard/column"
+import Link from 'next/link'
 
 export function DelegatedStake() {
   var modules = [
@@ -35,7 +36,7 @@ export function DelegatedStake() {
               {modules.map((module, index) => (
                 <tr key={index}>
                   <td className='text-left'>
-                    <a href={'/module/' + module.slug}>
+                    <Link href={'/module/' + module.slug}>
                       <div className="flex items-center space-x-3">
                         <div className="avatar">
                           <div className="mask mask-squircle w-12 h-12 rounded-full">
@@ -47,7 +48,7 @@ export function DelegatedStake() {
                           <div className="text-base text-left text-gray-500">{module.blockchain}</div>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   </td>
                   <Column first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
                   <Column first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />

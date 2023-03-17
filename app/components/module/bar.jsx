@@ -6,7 +6,7 @@ export function Bar({ data }) {
   return (
     <div className="navbar bg-base-100 shadow-xl rounded-xl ">
       <div className="flex w-full items-center justify-between space-x-6 p-6">
-        <Image className="h-12 w-12 flex-shrink-0 rounded-full bg-gray-300" fill src={data.image} alt={data.slug} />
+        <Image className="h-12 w-12 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={data.image} alt={data.slug} />
         <div className="flex-1 truncate ml-1">
           <div className="flex items-center space-x-3">
             <h3 className="truncate text-lg font-bold">{data.slug}</h3>

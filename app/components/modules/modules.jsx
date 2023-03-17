@@ -1,6 +1,7 @@
 import { Square3Stack3DIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { Menu, Popover } from '@headlessui/react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export function Modules() {
   var modules = [
@@ -105,7 +106,7 @@ export function Modules() {
                 {sortOptions.map((option) => (
                   <Menu.Item key={option}>
                     {({ active }) => (
-                      <a
+                      <Link
                         href={option.href}
                         className={classNames(
                           active ? 'bg-gray-100' : '',
@@ -113,7 +114,7 @@ export function Modules() {
                         )}
                       >
                         {option.name}
-                      </a>
+                      </Link>
                     )}
                   </Menu.Item>
                 ))}
@@ -175,7 +176,7 @@ export function Modules() {
             {modules.map((module, moduleId) => (
               <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
-                  <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" fill src={module.image} alt={module.symbol} />
+                  <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.symbol} />
                   <div className="flex-1 truncate">
                     <div className="flex items-center space-x-3">
                       <h3 className="truncate text-sm font-medium text-gray-900">{module.slug}</h3>
@@ -189,10 +190,10 @@ export function Modules() {
                 <div>
                   <div className="-mt-px flex divide-x divide-gray-200">
                     <div className="flex w-0 flex-1">
-                      <a href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                      <Link href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
                         {/* <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" /> */}
                         Explore
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

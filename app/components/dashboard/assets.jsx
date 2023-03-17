@@ -51,7 +51,7 @@ export function Assets({ title, percentage, worth, APR, _yield, assets }) {
 
             <div className="avatar">
               <div className="h-8 w-8 rounded-full place-self-center">
-                <Image fill src={asset.image} alt={asset.symbol} />
+                <Image width={600} height={600} src={asset.image} alt={asset.symbol} />
               </div>
             </div>
 

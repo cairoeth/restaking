@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ArrowSmallUpIcon, ArrowSmallDownIcon } from '@heroicons/react/24/outline';
 import { RocketLaunchIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link'
 
 export function Subscribe({ status, module, supplied, supplyAPY, minCollateraliation }) {
   const [amount, setAmount] = React.useState(0);
@@ -59,12 +60,12 @@ export function Subscribe({ status, module, supplied, supplyAPY, minCollateralia
           <div className="items-center space-x-3">
             <h3 className="truncate text-lg font-bold">You must be enrolled as a validator to subscribe!</h3>
           </div>
-          <a href='/enroll' className="btn btn-primary btn-block space-x-2 mt-4">
+          <Link href='/enroll' className="btn btn-primary btn-block space-x-2 mt-4">
             <div className="flex items-center">
               <RocketLaunchIcon className="w-6 h-6 mr-2" />
               Enroll
             </div>
-          </a>
+          </Link>
         </div>
       } </>
   )
