@@ -18,58 +18,58 @@ function stringToColour(str) {
   return colour;
 }
 
-function hexToRgbA(hex){
+function hexToRgbA(hex) {
   var c;
-  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-      c= hex.substring(1).split('');
-      if(c.length== 3){
-          c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-      }
-      c= '0x'+c.join('');
-      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',1)';
+  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    c = hex.substring(1).split('');
+    if (c.length == 3) {
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c = '0x' + c.join('');
+    return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',1)';
   }
   throw new Error('Bad Hex');
 }
 
 export const pieOptions = {
-cutout: '90%',
-plugins: {
+  cutout: '90%',
+  plugins: {
     legend: {
-    display: false
+      display: false
     },
     tooltip: {
-    enabled: false
+      enabled: false
     },
-},
+  },
 };
 
 export const piePlugins = [{
-    beforeDraw: function(chart) {
-        var width = chart.width,
-        height = chart.height,
-        ctx = chart.ctx;
-        ctx.restore();
+  beforeDraw: function (chart) {
+    var width = chart.width,
+      height = chart.height,
+      ctx = chart.ctx;
+    ctx.restore();
 
-        var text1 = "Total assets"
-        var text2 = "$97,242"
-        var text3 = "APR 4.02%"
-        var textY = height / 1.75;
-        ctx.textAlign = 'left';
+    var text1 = "Total assets"
+    var text2 = "$97,242"
+    var text3 = "APR 4.02%"
+    var textY = height / 1.75;
+    ctx.textAlign = 'left';
 
-        ///////////// TEXT 1 /////////////
-        ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
-        ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
+    ///////////// TEXT 1 /////////////
+    ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
+    ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
 
-        ///////////// TEXT 2 /////////////
-        ctx.font = "bold " + (height / 100).toFixed(2) + "rem Segoe UI";
-        ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
+    ///////////// TEXT 2 /////////////
+    ctx.font = "bold " + (height / 100).toFixed(2) + "rem Segoe UI";
+    ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
 
-        ///////////// TEXT 3 /////////////
-        ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
-        ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
+    ///////////// TEXT 3 /////////////
+    ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
+    ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
 
-        ctx.save();
-    } 
+    ctx.save();
+  }
 }]
 
 export function Portfolio() {
@@ -154,26 +154,26 @@ export function Portfolio() {
   };
 
   return (
-      <div className="card bg-base-100 shadow-xl mb-10 mt-6">
-          <div className="card-body">
-              <h2 className="card-title">
-                  <ClipboardDocumentCheckIcon className="w-6 h-6" />
-                  Portfolio
-              </h2>
-              <div className="overflow-x-auto max-h-min pb-8">
-                  <div className="grid grid-cols-4 gap-4">
-                      <div className="col-span-2 max-h-[90%] place-self-center">
-                          <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
-                      </div>
-                      <div>
-                          <Assets title='Staked assets' percentage='60.2' worth='58,656' APR='6.67' _yield='3,918' assets={stakedAssets} />
-                      </div>
-                      <div>
-                          <Assets title='Available to stake' percentage='38.8' worth='16,520' APR='7.05' _yield='2,911' assets={stakedAssets} />
-                      </div>
-                  </div>
-              </div>
+    <div className="card bg-base-100 shadow-xl mb-10 mt-6">
+      <div className="card-body">
+        <h2 className="card-title">
+          <ClipboardDocumentCheckIcon className="w-6 h-6" />
+          Portfolio
+        </h2>
+        <div className="overflow-x-auto max-h-min pb-8">
+          <div className="grid grid-cols-4 gap-4">
+            <div className="col-span-2 max-h-[90%] place-self-center">
+              <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
+            </div>
+            <div>
+              <Assets title='Staked assets' percentage='60.2' worth='58,656' APR='6.67' _yield='3,918' assets={stakedAssets} />
+            </div>
+            <div>
+              <Assets title='Available to stake' percentage='38.8' worth='16,520' APR='7.05' _yield='2,911' assets={stakedAssets} />
+            </div>
           </div>
+        </div>
       </div>
+    </div>
   )
 }

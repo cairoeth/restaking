@@ -3,7 +3,7 @@ import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'
 import { Modules } from "components/stake/modules"
-
+import { Performance } from "components/stake/performance"
 
 export default function App() {
   useEffect(() => {
@@ -17,6 +17,7 @@ export default function App() {
       <Navbar />
       <div className="px-4 py-4 sm:px-6 lg:px-40 bg-base-300 gap-y-2">
         <Modules />
+        <Performance />
       </div>
       <Footer />
     </Page>
