@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export function Assets({ title, percentage, worth, APR, _yield, assets }) {
   return (
     <div className="w-84 flex flex-col justify-center">
@@ -49,7 +51,7 @@ export function Assets({ title, percentage, worth, APR, _yield, assets }) {
 
             <div className="avatar">
               <div className="h-8 w-8 rounded-full place-self-center">
-                <img src={asset.image} />
+                <Image fill src={asset.image} alt={asset.symbol} />
               </div>
             </div>
 

@@ -2,8 +2,8 @@ import { useEffect, useState, React } from 'react'
 import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'
-import { Modules } from "components/stake/modules"
-import { Performance } from "components/stake/performance"
+import { Modules } from "components/modules/modules"
+import { Performance } from "components/modules/performance"
 
 export default function App() {
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { Square3Stack3DIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import { Menu, Popover } from '@headlessui/react'
+import Image from 'next/image'
 
 export function Modules() {
   var modules = [
@@ -131,11 +132,11 @@ export function Modules() {
                 <div>
                   <Popover.Button className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                     <span>{section.name}</span>
-                    {sectionIdx === 0 ? (
+                    {/* {sectionIdx === 0 ? (
                       <span className="ml-1.5 rounded bg-gray-200 py-0.5 px-1.5 text-xs font-semibold tabular-nums text-gray-700">
                         1
                       </span>
-                    ) : null}
+                    ) : null} */}
                     <ChevronDownIcon
                       className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
@@ -171,10 +172,10 @@ export function Modules() {
 
         <div className="max-h-min pb-8">
           <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
-            {modules.map((module) => (
-              <div className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
+            {modules.map((module, moduleId) => (
+              <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
-                  <img className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" src={module.image} alt="" />
+                  <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" fill src={module.image} alt={module.symbol} />
                   <div className="flex-1 truncate">
                     <div className="flex items-center space-x-3">
                       <h3 className="truncate text-sm font-medium text-gray-900">{module.slug}</h3>
@@ -190,7 +191,7 @@ export function Modules() {
                     <div className="flex w-0 flex-1">
                       <a href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
                         {/* <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" /> */}
-                        Stake
+                        Explore
                       </a>
                     </div>
                   </div>

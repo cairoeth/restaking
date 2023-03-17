@@ -34,8 +34,8 @@ export const data = {
   labels,
   datasets: [
     {
-      label: 'Ether',
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 250 })),
+      label: 'USD',
+      data: labels.map(() => faker.datatype.number({ min: 1500, max: 10000 })),
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },
   ],
