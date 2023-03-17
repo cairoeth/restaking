@@ -1,5 +1,5 @@
 import { Square3Stack3DIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
-import { Dialog, Disclosure, Menu, Popover } from '@headlessui/react'
+import { Menu, Popover } from '@headlessui/react'
 
 export function Modules() {
   var modules = [
