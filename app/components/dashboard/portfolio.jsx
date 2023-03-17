@@ -119,7 +119,6 @@ export function Portfolio() {
   for (var i = 0; i < stakedAssets.length; ++i) {
     // Calculate the color of the given token
     var color = hexToRgbA(stringToColour(stakedAssets[i].address))
-    console.log(color)
     // Assign color to the token legend
     stakedAssets[i].color = color
 
