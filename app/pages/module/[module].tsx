@@ -1,4 +1,5 @@
-import { useEffect, useState, React } from 'react'
+import React from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { Page } from 'components/ui/page'
@@ -41,10 +42,10 @@ export default function App() {
             <Bar data={data} />
           </div>
           <div className="col-span-2">
-            <Activity activities={data.activity} />
+            <Activity />
           </div>
           <div className="col-span-1 h-full">
-            <SubscribeDelegateModal enrolled={false} _subscribeActive={true} />
+            <SubscribeDelegateModal enrolled={false} _subscribeActive={true} module={data} />
           </div>
           {/* <div className="col-span-3">
             <Validators />

@@ -15,7 +15,11 @@ const client = createClient(
   }),
 );
 
-export function Page({ children }) {
+type Props = {
+  children: any;
+};
+
+export function Page({ children }: Props): JSX.Element {
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>

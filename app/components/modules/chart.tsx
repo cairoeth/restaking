@@ -1,7 +1,14 @@
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
-export function Chart({ title, icon, description, component }) {
+type Props = {
+  title: string;
+  icon: JSX.Element;
+  description: string;
+  component: JSX.Element;
+};
+
+export function Chart({ title, icon, description, component }: Props): JSX.Element {
   return (
     <Disclosure>
       <Disclosure.Button className="py-2">

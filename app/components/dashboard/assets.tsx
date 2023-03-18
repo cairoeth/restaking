@@ -1,6 +1,15 @@
 import Image from 'next/image'
 
-export function Assets({ title, percentage, worth, APR, _yield, assets }) {
+type Props = {
+  title: string;
+  percentage: string;
+  worth: string;
+  APR: string;
+  _yield: string;
+  assets: any;
+};
+
+export function Assets({ title, percentage, worth, APR, _yield, assets }: Props): JSX.Element {
   return (
     <div className="w-84 flex flex-col justify-center">
       <div className="flex">
@@ -40,7 +49,7 @@ export function Assets({ title, percentage, worth, APR, _yield, assets }) {
       </div>
 
       <ul role="list" className="mt-3 space-y-3 text-sm leading-6 text-gray-600">
-        {assets.map((asset, assetIdx) => (
+        {assets.map((asset: any, assetIdx: any) => (
           <li key={assetIdx} className="flex gap-x-3">
             {title == 'Staked assets' ?
               <span

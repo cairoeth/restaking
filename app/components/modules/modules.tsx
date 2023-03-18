@@ -35,8 +35,7 @@ export function Modules() {
 
   if (modules.length > 6) {
     columnAmount = 6
-  }
-  else {
+  } else {
     columnAmount = modules.length
   }
 
@@ -76,7 +75,7 @@ export function Modules() {
     },
   ]
 
-  function classNames(...classes) {
+  function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
   }
 
@@ -103,7 +102,7 @@ export function Modules() {
 
             <Menu.Items className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
               <div className="py-1">
-                {sortOptions.map((option) => (
+                {sortOptions.map((option: any) => (
                   <Menu.Item key={option}>
                     {({ active }) => (
                       <Link
@@ -123,7 +122,7 @@ export function Modules() {
           </Menu>
 
           <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
-            {filters.map((section, sectionIdx) => (
+            {filters.map((section: any, sectionIdx: number) => (
               <Popover
                 as="div"
                 key={section.name}
@@ -147,7 +146,7 @@ export function Modules() {
 
                 <Popover.Panel className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <form className="space-y-4">
-                    {section.options.map((option, optionIdx) => (
+                    {section.options.map((option: any, optionIdx: number) => (
                       <div key={option.value} className="flex items-center">
                         <input
                           id={`filter-${section.id}-${optionIdx}`}
