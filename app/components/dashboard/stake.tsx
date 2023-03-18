@@ -1,4 +1,8 @@
-export function Stake({ title }) {
+type Props = {
+  title: string;
+};
+
+export function Stake({ title }: Props): JSX.Element {
   return (
     <div className="ml-20 w-11/12">
       <div className="navbar">

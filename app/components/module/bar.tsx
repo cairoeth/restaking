@@ -2,7 +2,11 @@ import * as React from 'react'
 import { CalculatorIcon, DocumentChartBarIcon, ChartBarIcon, CurrencyDollarIcon, UserGroupIcon, BugAntIcon, ChartBarSquareIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image'
 
-export function Bar({ data }) {
+type Props = {
+  data: any;
+};
+
+export function Bar({ data }: Props): JSX.Element {
   return (
     <div className="navbar bg-base-100 shadow-xl rounded-xl ">
       <div className="flex w-full items-center justify-between space-x-6 p-6">

@@ -1,6 +1,13 @@
 import Link from 'next/link'
 
-export function Column({ first, second, third, slug }) {
+type Props = {
+  first: string;
+  second: string;
+  third: string;
+  slug: string;
+};
+
+export function Column({first, second, third, slug}: Props): JSX.Element {
   return (
     <td>
       <Link href={'/module/' + slug}>

@@ -5,10 +5,10 @@ import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
 
 ChartJS.register(ArcElement);
 
-function stringToColour(str) {
+function stringToColour(text: string) {
   var hash = 0;
-  for (var i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  for (var i = 0; i < text.length; i++) {
+    hash = text.charCodeAt(i) + ((hash << 5) - hash);
   }
   var colour = '#';
   for (var i = 0; i < 3; i++) {
@@ -18,8 +18,8 @@ function stringToColour(str) {
   return colour;
 }
 
-function hexToRgbA(hex) {
-  var c;
+function hexToRgbA(hex: string) {
+  var c: any;
   if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
     c = hex.substring(1).split('');
     if (c.length == 3) {
@@ -44,7 +44,8 @@ export const pieOptions = {
 };
 
 export const piePlugins = [{
-  beforeDraw: function (chart) {
+  id: 'textinside',
+  beforeDraw: function (chart: any) {
     var width = chart.width,
       height = chart.height,
       ctx = chart.ctx;

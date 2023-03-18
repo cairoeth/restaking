@@ -1,4 +1,5 @@
-import { useEffect, useState, React } from 'react'
+import React from 'react'
+import { useEffect, useState } from 'react'
 import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'

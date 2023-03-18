@@ -3,16 +3,38 @@ import { ArrowSmallUpIcon, ArrowSmallDownIcon } from '@heroicons/react/24/outlin
 import { RocketLaunchIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link'
 
-export function Subscribe({ status, module, supplied, supplyAPY, minCollateraliation }) {
+type PropsSubscribe = {
+  status: boolean;
+  module: any;
+  supplied: number;
+  supplyAPY: number;
+  minCollateraliation: number;
+};
+
+type PropsDelegate = {
+  module: any;
+  supplied: number;
+  supplyAPY: number;
+  minCollateraliation: number;
+};
+
+type PropsModal = {
+  enrolled: boolean;
+  _subscribeActive: boolean;
+  module: any;
+};
+
+function Subscribe({ status, module, supplied, supplyAPY, minCollateraliation }: PropsSubscribe): JSX.Element {
   const [amount, setAmount] = React.useState(0);
 
   return (
     <>
       {status ?
         <form
-          onSubmit={(e) => {
-            write?.()
-          }}>
+          // onSubmit={(e) => {
+          //   write?.()
+          // }}
+          >
           <div className="form-control">
             <label className="label">
               <span className="label-text">Supply amount</span>
@@ -21,7 +43,7 @@ export function Subscribe({ status, module, supplied, supplyAPY, minCollateralia
               <input
                 id="amount"
                 type="number"
-                onChange={(e) => setAmount(e.target.value)}
+                // onChange={(e) => setAmount(e.target.value)}
                 placeholder="0"
                 className="input input-bordered w-full"
                 value={amount}
@@ -71,14 +93,15 @@ export function Subscribe({ status, module, supplied, supplyAPY, minCollateralia
   )
 }
 
-export function Delegate({supplied, module, supplyAPY, minCollateraliation}) {
+function Delegate({supplied, module, supplyAPY, minCollateraliation}: PropsDelegate): JSX.Element {
   const [amount, setAmount] = React.useState(0);
 
   return (
     <form
-      onSubmit={(e) => {
-        write?.()
-      }}>
+      // onSubmit={(e) => {
+      //   write?.()
+      // }}
+      >
       <div className="form-control">
         <label className="label">
           <span className="label-text">{module.symbol} Amount</span>
@@ -87,7 +110,7 @@ export function Delegate({supplied, module, supplyAPY, minCollateraliation}) {
           <input
             id="amount"
             type="number"
-            onChange={(e) => setAmount(e.target.value)}
+            // onChange={(e) => setAmount(e.target.value)}
             placeholder="0"
             className="input input-bordered w-full"
             value={amount}
@@ -124,18 +147,18 @@ export function Delegate({supplied, module, supplyAPY, minCollateraliation}) {
   )
 }
 
-export function SubscribeDelegateModal({ enrolled, _subscribeActive, module }) {
+export function SubscribeDelegateModal({ enrolled, _subscribeActive, module }: PropsModal): JSX.Element {
   const [supplied, setSupplied] = React.useState(0);
   const [supplyAPY, setSupplyAPY] = React.useState(0);
   const [minCollateraliation, setMinCollateraliation] = React.useState(0);
 
   const [subscribeActive, setEnroll] = React.useState(_subscribeActive)
 
-  const setSubscribeActive = event => {
+  const setSubscribeActive = () => {
     setEnroll(true);
   };
 
-  const setDelegateActive = event => {
+  const setDelegateActive = () => {
     setEnroll(false);
   };
 
@@ -149,12 +172,12 @@ export function SubscribeDelegateModal({ enrolled, _subscribeActive, module }) {
         subscribeActive ?
           <div className="card bg-base-100 rounded-tl-none shadow-xl">
             <div className="card-body pt-5">
-              <Subscribe status={enrolled} module={module} />
+              <Subscribe status={enrolled} module={module} supplied={supplied} supplyAPY={supplyAPY} minCollateraliation={minCollateraliation} />
             </div>
           </div> :
           <div className="card bg-base-100 rounded-tl-none shadow-xl">
             <div className="card-body pt-5">
-              <Delegate module={module} />
+              <Delegate supplied={supplied} module={module} supplyAPY={supplyAPY} minCollateraliation={minCollateraliation} />
             </div>
           </div>
       }
