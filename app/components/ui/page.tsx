@@ -1,19 +1,57 @@
-import { WagmiConfig, createClient } from "wagmi";
+import { WagmiConfig, configureChains, createClient } from "wagmi";
 import { goerli } from "wagmi/chains";
-import { ConnectKitProvider, getDefaultClient } from "connectkit";
+import { ConnectKitProvider } from "connectkit";
+import { infuraProvider } from 'wagmi/providers/infura'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
-const alchemyId = process.env.ALCHEMY_ID;
-
-// Choose which chains you'd like to show
-const chains = [goerli];
-
-const client = createClient(
-  getDefaultClient({
-    appName: "App",
-    alchemyId,
-    chains,
-  }),
+const { chains, provider, webSocketProvider } = configureChains(
+  [goerli],
+  [infuraProvider({ apiKey: process.env.INFURA as string, stallTimeout: 1_000 })],
 );
+
+type WalletConnectOptionsProps =
+  | {
+      version: '2';
+      projectId: string;
+    }
+  | {
+      version: '1';
+    }
+  | undefined;
+
+const wcOpts: WalletConnectOptionsProps = { version: '1' };
+
+const client = createClient({
+  connectors: [
+    new MetaMaskConnector({
+      chains,
+      options: {
+        shimDisconnect: true,
+        shimChainChangedDisconnect: true,
+        UNSTABLE_shimOnConnectSelectAccount: true,
+      },
+    }),
+    new CoinbaseWalletConnector({
+      chains,
+      options: {
+        appName: 'Restaking',
+        headlessMode: true,
+      },
+    }),
+    new WalletConnectConnector({
+      chains,
+      options: {
+        qrcode: false,
+        ...wcOpts,
+      },
+    }),
+  ],
+  autoConnect: true,
+  provider,
+  webSocketProvider
+});
 
 type Props = {
   children: any;
