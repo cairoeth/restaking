@@ -10,7 +10,7 @@ export function Chart({ title, icon, description, component }) {
             <div className="flex-1 truncate">
               <div className="flex items-center space-x-3">
                 {icon}
-                <div class="text-lg font-bold">{title}</div>
+                <div className="text-lg font-bold">{title}</div>
                 <p className="mt-1 truncate text-sm text-gray-500">{description}</p>
                 <ChevronDownIcon
                   className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
