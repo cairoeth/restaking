@@ -145,6 +145,8 @@ export function Portfolio() {
   
       var text1 = "Total assets"
       var text2 = "$" + totalWorth
+      console.log(totalWorth)
+      console.log(text2)
       var text3 = "APR " + ((parseFloat(availableAssets.APR) + parseFloat(stakedAssets.APR)) / 2).toString() + "%"
       var textY = height / 1.75;
       ctx.textAlign = 'left';
