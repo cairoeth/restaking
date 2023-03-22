@@ -13,7 +13,8 @@ export function Navbar() {
         <ul className="menu menu-horizontal px-1">
           <li><Link href="/">Dashboard</Link></li>
           <li><Link href="/modules">Modules</Link></li>
-          <li>
+          <li><Link href="#" target='_blank'>Docs</Link></li>
+          {/* <li>
             <Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
               <Popover as="div" key='More' className="relative inline-block text-left">
                 <Popover.Button className="group inline-flex items-center justify-center">
@@ -33,7 +34,7 @@ export function Navbar() {
                 </Popover.Panel>
               </Popover>
             </Popover.Group>
-          </li>
+          </li> */}
 
           {/*
           <li tabIndex={0}>
