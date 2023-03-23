@@ -9,7 +9,10 @@ contract OptimismModule {
     address[] public sequencers;
 
     constructor() {
-        sequencers = [0xA9f7b7140Ec9EB418caFBEd4C6d8428705ed74f8, 0x89289892E26F4ca1dCea57F5A0d0285F5dcD000f];
+        sequencers = [
+            0xA9f7b7140Ec9EB418caFBEd4C6d8428705ed74f8,
+            0x89289892E26F4ca1dCea57F5A0d0285F5dcD000f
+        ];
     }
 
     // Returns a sequencer using prevrandao,

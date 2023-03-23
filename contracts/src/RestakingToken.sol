@@ -33,7 +33,12 @@ contract rsToken is ERC20 {
     /// @param symbol The symbol of the token.
     /// @param decimals The number of decimals of the token.
     /// @param token THe address of the underlying wrapped token.
-    constructor(string memory name, string memory symbol, uint8 decimals, address token) ERC20(name, symbol, decimals) {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        address token
+    ) ERC20(name, symbol, decimals) {
         wrapped = token;
     }
 
@@ -41,11 +46,12 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Mint restaking token 
+    /// @notice Mint restaking token
+    /// @param receiver The address to receive the restaking token.
     /// @param amount The amount to mint.
-    function deposit(uint256 amount) external {
-        ERC20(wrapped).safeTransferFrom(msg.sender, address(this), amount);
-        _mint(msg.sender, amount);
+    function deposit(address receiver, uint256 amount) external {
+        ERC20(wrapped).safeTransferFrom(receiver, address(this), amount);
+        _mint(receiver, amount);
     }
 
     /// @notice Withdraw underlying token by burning the restaking token.
