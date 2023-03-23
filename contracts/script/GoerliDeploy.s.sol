@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+// SPDX-License-Identifier: BUSL-1.1
+pragma solidity ^0.8.18;
 
 import "forge-std/Script.sol";
 
@@ -7,13 +7,16 @@ import "@restaking/RestakingController.sol";
 
 import {MockToken} from "../test/utils/MockToken.sol";
 
-contract SearchScript is Script {
+contract GoerliDeploy is Script {
+    RestakingController internal controller;
+    MockToken internal underlyingToken;
+
     function setUp() public {}
 
     function run() public {
         string memory seedPhrase = vm.readFile(".secret");
         uint256 privateKey = vm.deriveKey(seedPhrase, 0);
-        address DAO = vm.rememberKey(privateKey);
+        address DEPLOYER = vm.rememberKey(privateKey);
 
         vm.startBroadcast(privateKey);
 

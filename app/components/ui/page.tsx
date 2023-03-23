@@ -1,20 +1,38 @@
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { goerli, localhost } from "wagmi/chains";
+import { goerli, localhost, foundry } from "wagmi/chains";
 import { ConnectKitProvider } from "connectkit";
 import { infuraProvider } from 'wagmi/providers/infura'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { Chain } from 'wagmi'
+
+export const testing = {
+  id: 6969,
+  name: 'Testing',
+  network: 'Testing',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ethereum',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    public: { http: ['http://0.0.0.0:8545/'] },
+    default: { http: ['http://0.0.0.0:8545/'] },
+  },
+} as const satisfies Chain
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [goerli, localhost],
-  [infuraProvider({ apiKey: process.env.INFURA as string, stallTimeout: 1_000 }),
-  jsonRpcProvider({
-    rpc: (chain) => ({
-      http: `http://0.0.0.0:8545/`,
+  [goerli, testing],
+  [
+    infuraProvider({ apiKey: process.env.INFURA as string, stallTimeout: 1_000 }),
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `http://0.0.0.0:8545/`,
+      }),
     }),
-  })],
+  ],
 );
 
 type WalletConnectOptionsProps =

@@ -3,25 +3,26 @@ import Image from 'next/image'
 import { Column } from "components/dashboard/column"
 import Link from 'next/link'
 import { CreateWrapperModal } from 'components/dashboard/modals/createWrapper'
+import { useContractRead } from 'wagmi'
+import { contracts } from 'components/helpers/contracts'
 
 export function AllTokens() {
+  // const { data, isError, isLoading } = useContractRead({
+  //   address: contracts.controller.address as `0x${string}`,
+  //   abi: contracts.controller.abi,
+  //   functionName: 'getHunger',
+  // })
+
   var modules: any = [
-    // {
-    //   slug: 'FVM',
-    //   symbol: 'ETH',
-    //   blockchain: 'Ethereum Mainnet',
-    //   image: 'https://storage.googleapis.com/ethglobal-api-production/organizations%2F9zj01%2Flogo%2F1677081097389_FVM%20square%20logo.png',
-    //   stake: '218,094.32',
-    //   stakeUSD: '21,200',
-    //   rewardsTotal: '17,729',
-    //   rewardsTotalUSD: '155',
-    //   rewardsAvailable: '1,952',
-    //   rewardsAvailableUSD: '85',
-    //   delegatee: '0x741cB6...',
-    //   ens: '👅🌈👅.eth',
-    //   apy: '15.84',
-    //   apyPerformance: '+10.27'
-    // },
+    {
+      name: 'rsEthereum',
+      symbol: 'rsETH',
+      image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=rsETH",
+      address: '0x741cB6A6a8dC16363...',
+      underlying: '0x741cB6A6a8dC16363...',
+      totalSupply: '17,729',
+      yourBalance: '0',
+    },
   ]
 
   return (
@@ -41,7 +42,7 @@ export function AllTokens() {
             <div className="hidden sm:flex sm:items-baseline sm:space-x-8">
               <div className="relative inline-block text-left">
                 <div className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                  <label htmlFor="create-wrapper-modal" className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
+                  <label htmlFor="create-wrapper-modal" className="btn btn-sm btn-primary btn-outline ml-4 align-middle">
                       Create Wrapper
                   </label>
                 </div>
@@ -56,35 +57,28 @@ export function AllTokens() {
                   {modules.map((module: any, index: number) => (
                     <tr key={index}>
                       <td className='text-left'>
-                        <Link href={'/module/' + module.slug}>
+                        <Link href={'/module/' + module.name}>
                           <div className="flex items-center space-x-3">
                             <div className="avatar">
                               <div className="mask mask-squircle w-12 h-12 rounded-full">
-                                <Image width={600} height={600} src={module.image} alt={"Image of module " + module.slug} />
+                                <Image width={600} height={600} src={module.image} alt={"Image of module " + module.name} />
                               </div>
                             </div>
                             <div>
-                              <div className="text-lg font-bold">{module.slug}</div>
-                              <div className="text-base text-left text-gray-500">{module.blockchain}</div>
+                              <div className="text-lg font-bold">{module.name}</div>
+                              <div className="text-base text-left text-gray-500">{module.symbol}</div>
                             </div>
                           </div>
                         </Link>
                       </td>
-                      <Column first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
-                      <Column first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
-                      <Column first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
-                      <Column first="Delegatee" second={module.delegatee} third={module.ens} slug={module.slug} />
-                      <Column first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
+                      <Column first="Address" second={module.address} third={''} slug={module.slug} />
+                      <Column first="Underlying" second={module.underlying} third={''} slug={module.slug} />
+                      <Column first="Total Supply" second={module.totalSupply + ' ' + module.symbol} third={''} slug={module.slug} />
+                      <Column first="Your balance" second={module.yourBalance + ' ' + module.symbol} third={''} slug={module.slug} />
                       <td>
                         <div className="flex-none">
-                          <button className="btn btn-sm btn-primary btn-outline btn-circle align-middle">
-                            <PlusIcon className="h-6 w-6" />
-                          </button>
-                          <button className="btn btn-sm btn-primary btn-outline btn-circle ml-4 align-middle">
-                            <MinusIcon className="h-6 w-6" />
-                          </button>
                           <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
-                            Claim
+                            Explore modules
                           </button>
                         </div>
                       </td>
