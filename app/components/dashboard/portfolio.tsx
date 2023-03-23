@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
 import { useContractReads, useBalance, useAccount } from 'wagmi'
-import { contracts } from 'components/helpers/contracts'
+import { tokens } from 'components/helpers/contracts'
 import { usePrice } from 'components/helpers/prices'
 import { BigNumber, ethers } from "ethers";
 import { StakedAssetsSimulator } from 'components/helpers/simulators'
@@ -27,19 +27,19 @@ function useAvailableAssets(address: any) {
   var totalUSD = 0
   var APR = 7.7
 
-  for (var i = 0; i < contracts.length; ++i) {
+  for (var i = 0; i < tokens.length; ++i) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, isError, isLoading } = useBalance({
       address: address,
-      token: contracts[i].address as any,
+      token: tokens[i].address as any,
     })
 
-    const amountUSD: any = data?.formatted as any * contracts[i].price
+    const amountUSD: any = data?.formatted as any * tokens[i].price
 
     availableAssets.push({
-      symbol: contracts[i].symbol,
-      address: contracts[i].address,
-      image: contracts[i].image,
+      symbol: tokens[i].symbol,
+      address: tokens[i].address,
+      image: tokens[i].image,
       amount: data?.formatted,
       amountUSD: amountUSD.toFixed(2),
     })
@@ -62,16 +62,16 @@ function useStakedAssets(address: any) {
 
   const data: any = StakedAssetsSimulator()
 
-  for (var i = 0; i < contracts.length; ++i) {
-    const amountUSD: any = data[contracts[i].address] as any * contracts[i].price
+  for (var i = 0; i < tokens.length; ++i) {
+    const amountUSD: any = data[tokens[i].address] as any * tokens[i].price
 
     stakedAssets.push({
-      symbol: contracts[i].symbol,
-      address: contracts[i].address,
-      image: contracts[i].image,
-      amount: data[contracts[i].address],
+      symbol: tokens[i].symbol,
+      address: tokens[i].address,
+      image: tokens[i].image,
+      amount: data[tokens[i].address],
       amountUSD: amountUSD.toFixed(2),
-      color: contracts[i].color,
+      color: tokens[i].color,
     })
 
     totalUSD += amountUSD
@@ -142,7 +142,7 @@ export function Portfolio() {
         height = chart.height,
         ctx = chart.ctx;
       ctx.restore();
-  
+
       var text1 = "Total assets"
       var text2 = "$" + totalWorth
       console.log(totalWorth)
@@ -150,19 +150,19 @@ export function Portfolio() {
       var text3 = "APR " + ((parseFloat(availableAssets.APR) + parseFloat(stakedAssets.APR)) / 2).toString() + "%"
       var textY = height / 1.75;
       ctx.textAlign = 'left';
-  
+
       ///////////// TEXT 1 /////////////
       ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
       ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
-  
+
       ///////////// TEXT 2 /////////////
       ctx.font = "bold " + (height / 100).toFixed(2) + "rem Segoe UI";
       ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
-  
+
       ///////////// TEXT 3 /////////////
       ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
       ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
-  
+
       ctx.save();
     }
   }]

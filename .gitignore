@@ -4,7 +4,7 @@ out/
 
 # Ignores development broadcast logs
 !/broadcast
-/broadcast/*
+/contracts/broadcast/*
 /broadcast/*/31337/
 .env
 
@@ -44,3 +44,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+contracts/.secret

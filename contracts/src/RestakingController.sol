@@ -61,26 +61,27 @@ contract RestakingController {
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Create a pool with the given parameters.
-    /// @param token ERC20 token to wrap around.
-    function createWrapper(ERC20 token) public returns (address wrapper) {
-        address _token = address(token);
-        if (tokenToWrapper[_token] != address(0))
-            revert WrapperExisting(_token);
+    /// @param token Address of ERC20 token to wrap around.
+    function createWrapper(address token) public returns (address wrapper) {
+        if (tokenToWrapper[token] != address(0))
+            revert WrapperExisting(token);
+
+        ERC20 _token = ERC20(token);
 
         // Create wrapper and save its address
         wrapper = address(
             new rsToken(
-                string.concat(prefix, token.name()),
-                string.concat(prefix, token.symbol()),
-                token.decimals(),
-                _token
+                string.concat(prefix, _token.name()),
+                string.concat(prefix, _token.symbol()),
+                _token.decimals(),
+                token
             )
         );
 
         wrappers.push(wrapper);
-        tokenToWrapper[_token] = wrapper;
+        tokenToWrapper[token] = wrapper;
 
-        emit WrapperCreated(_token, wrapper);
+        emit WrapperCreated(token, wrapper);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -96,7 +97,7 @@ contract RestakingController {
         address wrapper;
 
         if (tokenToWrapper[token] == address(0)) {
-            wrapper = createWrapper(ERC20(token));
+            wrapper = createWrapper(token);
         } else {
             wrapper = tokenToWrapper[token];
         }

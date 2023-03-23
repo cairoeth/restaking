@@ -60,22 +60,10 @@ contract TestRestakingController is Test {
     function testWrapperCreation() public {
         vm.startPrank(USER);
 
-        address wrapper = controller.createWrapper(ERC20(underlyingToken));
+        address wrapper = controller.createWrapper(address(underlyingToken));
 
         vm.expectRevert();
-        controller.createWrapper(ERC20(underlyingToken));
-
-        assertTrue(controller.tokenToWrapper(address(underlyingToken)) == wrapper);
-    }
-
-    /// @dev Check that token can be wrapped into rsToken through the controller.
-    function testWrapperCreation() public {
-        vm.startPrank(USER);
-
-        address wrapper = controller.createWrapper(ERC20(underlyingToken));
-
-        vm.expectRevert();
-        controller.createWrapper(ERC20(underlyingToken));
+        controller.createWrapper(address(underlyingToken));
 
         assertTrue(controller.tokenToWrapper(address(underlyingToken)) == wrapper);
     }

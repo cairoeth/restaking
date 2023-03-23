@@ -51,7 +51,7 @@
 //     /// @notice The percentage of the slashed amount that is given as a reward to the opposite party
 //     uint256 rewardedSlashAmount = 1e18 / 2;
 
-//     /// @notice The percentage of the reward that is given to the party that settles the request. 
+//     /// @notice The percentage of the reward that is given to the party that settles the request.
 //     /// The rest is given to whomever won
 //     uint256 settlerReward;
 
@@ -88,7 +88,9 @@
 //     //////////////////////////////////////////////////////////////*/
 
 //     modifier isCurrentlyVoted(uint256 requestId) {
-//         if (requests[requestId].votingStartTime + votingPeriod < block.timestamp) revert VotingIsOver(requestId);
+//         if (
+//             requests[requestId].votingStartTime + votingPeriod < block.timestamp
+//         ) revert VotingIsOver(requestId);
 //         _;
 //     }
 
@@ -113,11 +115,11 @@
 //     /// @param requestData Request data
 //     /// @param bondSize The amount of collateral put up for the request
 //     /// @param liveness The amount of time allowed to dispter the request
-//     function request(bytes calldata requestData, uint256 bondSize, uint256 liveness)
-//         external
-//         payable
-//         returns (uint256)
-//     {
+//     function request(
+//         bytes calldata requestData,
+//         uint256 bondSize,
+//         uint256 liveness
+//     ) external payable returns (uint256) {
 //         // We create a new request by using push function (which also increases the array length)
 //         // Default values for the request are set by its type
 //         Request storage newRequest = requests.push();
@@ -148,7 +150,9 @@
 //         if (isProposed(requestId)) revert RequestAlreadyProposed(requestId);
 
 //         // We use sha256 to maintain consistency with the restaking controller
-//         bytes32 ancillaryData = sha256(abi.encode(sha256("Proposal(uint256,bytes32)"), requestId, answer));
+//         bytes32 ancillaryData = sha256(
+//             abi.encode(sha256("Proposal(uint256,bytes32)"), requestId, answer)
+//         );
 
 //         // The restaking controller contract verifies the signature for us
 //         restakingController.restake(
@@ -180,22 +184,29 @@
 //             if (voteResult == 0) {
 //                 // vote result: YES
 //                 _rewardAndSlash(requestId, false);
-//                 requests[requestId].finalAnswer = requests[requestId].proposerAnswer;
+//                 requests[requestId].finalAnswer = requests[requestId]
+//                     .proposerAnswer;
 //             } else if (voteResult == 1) {
 //                 // vote result: NO
 //                 _rewardAndSlash(requestId, true);
-//                 requests[requestId].finalAnswer = requests[requestId].disputerAnswer;
+//                 requests[requestId].finalAnswer = requests[requestId]
+//                     .disputerAnswer;
 //             } else {
 //                 // vote result: UNRESOLVED
 //                 // TODO: what happens here?
 //                 requests[requestId].finalAnswer = keccak256("0x1");
 //             }
 //         } else {
-//             if (requests[requestId].proposalTime + requests[requestId].liveness > block.timestamp) {
+//             if (
+//                 requests[requestId].proposalTime +
+//                     requests[requestId].liveness >
+//                 block.timestamp
+//             ) {
 //                 revert LivenessNotOver(requestId);
 //             }
 
-//             requests[requestId].finalAnswer = requests[requestId].proposerAnswer;
+//             requests[requestId].finalAnswer = requests[requestId]
+//                 .proposerAnswer;
 //             _rewardProposer(requestId);
 //         }
 
@@ -219,9 +230,12 @@
 //         DepositVerifier.Fp2 calldata signatureYCoordinate
 //     ) external notEmptyAnswer(answer) {
 //         if (isDisputed(requestId)) revert RequestAlreadyDisputed(requestId);
-//         if (answer == requests[requestId].proposerAnswer) revert SameAnswewr(answer);
+//         if (answer == requests[requestId].proposerAnswer)
+//             revert SameAnswewr(answer);
 
-//         bytes32 ancillaryData = keccak256(abi.encode(keccak256("Dispute(uint256,bytes32)"), requestId, answer));
+//         bytes32 ancillaryData = keccak256(
+//             abi.encode(keccak256("Dispute(uint256,bytes32)"), requestId, answer)
+//         );
 
 //         // Set up bond
 //         restakingController.restake(
@@ -257,7 +271,10 @@
 //     /// @notice Return the vote collateral
 //     /// @param requestId ID of request
 //     /// @param to Receiver of collateral
-//     function returnVoteCollateral(uint256 requestId, address payable to) external returns (uint256 collateralAmount) {
+//     function returnVoteCollateral(
+//         uint256 requestId,
+//         address payable to
+//     ) external returns (uint256 collateralAmount) {
 //         if (!isSettled(requestId)) revert RequestNotSettled(requestId);
 
 //         collateralAmount = requests[requestId].votersCollateral[msg.sender];
@@ -289,7 +306,9 @@
 //     /// @param requestId ID of request
 //     function isVoteOver(uint256 requestId) public view returns (bool) {
 //         if (!isDisputed(requestId)) revert RequestNotDisputed(requestId);
-//         return block.timestamp > requests[requestId].votingStartTime + votingPeriod;
+//         return
+//             block.timestamp >
+//             requests[requestId].votingStartTime + votingPeriod;
 //     }
 
 //     /// @dev Return true if a request has been disputed
@@ -303,15 +322,15 @@
 //     /// @param requestId ID of request
 //     function getVoteResult(uint256 requestId) public view returns (uint256) {
 //         if (
-//             requests[requestId].votes[0] > requests[requestId].votes[1]
-//                 && requests[requestId].votes[0] > requests[requestId].votes[2]
+//             requests[requestId].votes[0] > requests[requestId].votes[1] &&
+//             requests[requestId].votes[0] > requests[requestId].votes[2]
 //         ) {
 //             return 0;
 //         }
 
 //         if (
-//             requests[requestId].votes[1] > requests[requestId].votes[0]
-//                 && requests[requestId].votes[1] > requests[requestId].votes[2]
+//             requests[requestId].votes[1] > requests[requestId].votes[0] &&
+//             requests[requestId].votes[1] > requests[requestId].votes[2]
 //         ) {
 //             return 1;
 //         }
@@ -326,7 +345,9 @@
 //     /// @dev Reward the settler
 //     /// @param requestId ID of request
 //     function _rewardSettler(uint256 requestId) internal {
-//         (bool sent, bytes memory data) = payable(msg.sender).call{value: requests[requestId].reward * settlerReward}("");
+//         (bool sent, bytes memory data) = payable(msg.sender).call{
+//             value: requests[requestId].reward * settlerReward
+//         }("");
 //         if (!sent) revert FailedToSendEther(data);
 //     }
 
@@ -334,31 +355,44 @@
 //     /// @param requestId ID of request
 //     function _rewardProposer(uint256 requestId) internal {
 //         restakingController.unrestake(
-//             address(this), requests[requestId].proposerPubkey, requests[requestId].bondSize + requests[requestId].reward
+//             address(this),
+//             requests[requestId].proposerPubkey,
+//             requests[requestId].bondSize + requests[requestId].reward
 //         );
 
 //         // NOTE: can this function silently fail?
-//         restakingController.rewardWithETH{value: requests[requestId].reward * (1 - settlerReward)}(
-//             requests[requestId].proposerPubkey
-//         );
+//         restakingController.rewardWithETH{
+//             value: requests[requestId].reward * (1 - settlerReward)
+//         }(requests[requestId].proposerPubkey);
 //     }
 
 //     /// @dev Reward and slash
 //     /// @param requestId ID of request
 //     /// @param punishProposer True if the proposer should be slashed
 //     function _rewardAndSlash(uint256 requestId, bool punishProposer) internal {
-//         bytes memory pubkeyPunish =
-//             punishProposer ? requests[requestId].proposerPubkey : requests[requestId].disputerPubkey;
-//         bytes memory pubkeyReward =
-//             punishProposer ? requests[requestId].disputerPubkey : requests[requestId].proposerPubkey;
+//         bytes memory pubkeyPunish = punishProposer
+//             ? requests[requestId].proposerPubkey
+//             : requests[requestId].disputerPubkey;
+//         bytes memory pubkeyReward = punishProposer
+//             ? requests[requestId].disputerPubkey
+//             : requests[requestId].proposerPubkey;
 
 //         restakingController.slash(
-//             address(this), pubkeyPunish, requests[requestId].bondSize * (1e18 - rewardedSlashAmount)
+//             address(this),
+//             pubkeyPunish,
+//             requests[requestId].bondSize * (1e18 - rewardedSlashAmount)
 //         );
 //         restakingController.slashAndReward(
-//             address(this), pubkeyPunish, pubkeyReward, requests[requestId].bondSize * rewardedSlashAmount
+//             address(this),
+//             pubkeyPunish,
+//             pubkeyReward,
+//             requests[requestId].bondSize * rewardedSlashAmount
 //         );
 //         // and return the bond to the winner
-//         restakingController.unrestake(address(this), pubkeyReward, requests[requestId].bondSize);
+//         restakingController.unrestake(
+//             address(this),
+//             pubkeyReward,
+//             requests[requestId].bondSize
+//         );
 //     }
 // }
