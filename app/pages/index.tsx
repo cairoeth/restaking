@@ -5,7 +5,7 @@ import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'
 import { Portfolio } from "components/dashboard/portfolio"
 import { EnrolledStake } from "components/dashboard/enrolled"
-import { DelegatedStake } from "components/dashboard/delegated"
+import { AllTokens } from "components/dashboard/tokens"
 import { useAccount } from 'wagmi'
 import { ConnectKitProvider, ConnectKitButton, getDefaultClient } from "connectkit";
 import Link from 'next/link'
@@ -31,7 +31,7 @@ export default function App() {
         <div className="px-4 py-4 sm:px-6 lg:px-40 bg-base-300 gap-y-2">
           <Portfolio />
           <EnrolledStake />
-          <DelegatedStake />
+          <AllTokens />
         </div>
         <Footer />
       </Page>

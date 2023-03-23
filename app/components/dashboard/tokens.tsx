@@ -1,9 +1,10 @@
-import { UserGroupIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
+import { PuzzlePieceIcon, PlusIcon, MinusIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
 import { Column } from "components/dashboard/column"
 import Link from 'next/link'
+import { Menu, Popover } from '@headlessui/react'
 
-export function DelegatedStake() {
+export function AllTokens() {
   var modules: any = [
     // {
     //   slug: 'FVM',
@@ -26,10 +27,27 @@ export function DelegatedStake() {
   return (
     <div className="card bg-base-100 shadow-xl mb-10">
       <div className="card-body">
-        <h2 className="card-title">
-          <UserGroupIcon className="w-6 h-6" />
-          Delegated stake
-        </h2>
+        <div className="card-title flex items-center justify-between mb-6">
+          <div className="relative inline-block text-left">
+            <div className="inline-flex mr-4">
+              <h2>
+                <PuzzlePieceIcon className="inline-flex w-6 h-6 mr-1.5 mb-1" />
+                All wrappers
+              </h2>
+            </div>
+          </div>
+
+          <div className="hidden sm:flex sm:items-baseline sm:space-x-8">
+            <div className="relative inline-block text-left">
+              <div className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
+                  Create Wrapper
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="overflow-x-auto max-h-min">
           {modules.length > 0 ?
             <table className="table w-full text-center">
@@ -73,7 +91,7 @@ export function DelegatedStake() {
                 ))}
               </tbody>
             </table>
-            : 'No delegated modules'}
+            : 'No wrappers created'}
         </div>
       </div>
     </div>

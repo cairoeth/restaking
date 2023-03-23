@@ -93,13 +93,15 @@ contract RestakingController {
     /// @param module Module to restake to.
     function restake(address token, uint256 amount, address module) external {
         if (moduleIndex[module] == 0) revert ModuleUnexistant(module);
+        address wrapper;
+
         if (tokenToWrapper[token] == address(0)) {
-            address wrapper = createWrapper(ERC20(token));
+            wrapper = createWrapper(ERC20(token));
         } else {
-            address wrapper = tokenToWrapper[token];
+            wrapper = tokenToWrapper[token];
         }
 
-        rsToken(wrapper).deposit(amount);
+        rsToken(wrapper).deposit(msg.sender, amount);
 
         // todo: check that module exists
         // todo: check that token wrapper is created, if not, create it
@@ -112,8 +114,8 @@ contract RestakingController {
     /// @param amounts Amounts of tokens to restake.
     /// @param module Module to restake to.
     function restakeMultiple(
-        address[] tokens,
-        uint256[] amounts,
+        address[] calldata tokens,
+        uint256[] calldata amounts,
         address module
     ) external {
         // todo: check that module exists
@@ -123,7 +125,7 @@ contract RestakingController {
     }
 
     /// @notice Unstake tokens from a module.
-    /// @param tokens ERC20 token to unstake.
+    /// @param token ERC20 token to unstake.
     /// @param amount Amount to unstake.
     /// @param module Module to unstake from.
     function unstake(address token, uint256 amount, address module) external {
