@@ -3,13 +3,16 @@ pragma solidity ^0.8.18;
 
 import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 import {ERC20} from "@solmate/tokens/ERC20.sol";
+import {ERC165Checker} from "@openzeppelin/utils/introspection/ERC165Checker.sol";
 import {rsToken} from "@restaking/RestakingToken.sol";
+import {IModule} from "@restaking/modules/IModule.sol";
 
 /// @title Restaking Controller
 /// @author cairoeth
 /// @author 0xfuturistic
 /// @notice Controller to restake tokens, manage modules, and slashings.
 contract RestakingController {
+    using ERC165Checker for address;
 
     /*//////////////////////////////////////////////////////////////
                                 VARIABLES
@@ -17,6 +20,9 @@ contract RestakingController {
 
     /// @dev Constant string identifier to concatenate with the token name.
     string public constant prefix = "rs";
+
+    /// @dev Constant interface identifier to check with ERC-165.
+    bytes4 public constant interfaceId = 0x20965255;
 
     /// @dev Store of all tokens created by this controller.
     address[] public wrappers;
@@ -47,6 +53,7 @@ contract RestakingController {
 
     error WrapperExisting(address token);
     error Unauthorized(address admin);
+    error Unsupported(address module);
 
     /*//////////////////////////////////////////////////////////////
                             EXTERNAL FUNCTIONS
@@ -76,7 +83,7 @@ contract RestakingController {
     /// @dev Must follow the module interface.
     /// @param module Module address.
     function addModule(address module) external {
-        // TODO: Check interface matches module base.
+        if (!IModule(module).supportsInterface(interfaceId)) revert Unsupported(module);
 
         moduleIndex[module] = modules.length - 1;
         admin[module] = msg.sender;
