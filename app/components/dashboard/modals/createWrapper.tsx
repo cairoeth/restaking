@@ -29,6 +29,10 @@ export function CreateWrapperModal() {
     hash: data?.hash,
   })
 
+  if (isSuccess) {
+    window.location.reload();
+  }
+
   return (
     <>
       <input type="checkbox" id="create-wrapper-modal" className="modal-toggle" />

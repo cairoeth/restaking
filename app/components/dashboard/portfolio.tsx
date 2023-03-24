@@ -2,11 +2,17 @@ import { Assets } from "components/dashboard/assets"
 import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
-import { useContractReads, useBalance, useAccount } from 'wagmi'
-import { tokens } from 'components/helpers/contracts'
+import { useContractRead, useContractReads, useBalance, useAccount } from 'wagmi'
+import { tokens, contracts } from 'components/helpers/contracts'
 import { usePrice } from 'components/helpers/prices'
 import { BigNumber, ethers } from "ethers";
 import { StakedAssetsSimulator } from 'components/helpers/simulators'
+
+type Props = {
+  data: any
+  isError: boolean
+  isLoading: boolean
+}
 
 ChartJS.register(ArcElement);
 
@@ -90,6 +96,14 @@ export function Portfolio() {
   var pieColors = []
 
   const { address, isConnecting, isDisconnected } = useAccount()
+
+  const allWrappersCall: Props = useContractRead({
+    address: contracts.controller.address as `0x${string}`,
+    abi: contracts.controller.abi,
+    functionName: 'allWrappers',
+  })
+
+  
 
   const availableAssets: any = useAvailableAssets(address)
   const stakedAssets: any = useStakedAssets(address)
