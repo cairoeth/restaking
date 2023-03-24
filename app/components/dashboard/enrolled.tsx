@@ -1,6 +1,6 @@
 import { UserIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
-import { Column } from "components/dashboard/column"
+import { ColumnEnrolled } from "components/dashboard/column"
 import Link from 'next/link'
 
 export function EnrolledStake() {
@@ -67,11 +67,11 @@ export function EnrolledStake() {
                         </div>
                       </Link>
                     </td>
-                    <Column first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
-                    <Column first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
-                    <Column first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
-                    <Column first="Accuracy" second={module.accuracy + '%'} third={module.accuracyPerformance + '%'} slug={module.slug} />
-                    <Column first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
+                    <ColumnEnrolled first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
+                    <ColumnEnrolled first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
+                    <ColumnEnrolled first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
+                    <ColumnEnrolled first="Accuracy" second={module.accuracy + '%'} third={module.accuracyPerformance + '%'} slug={module.slug} />
+                    <ColumnEnrolled first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
                     <td>
                       <div className="flex-none">
                         <button className="btn btn-sm btn-primary btn-outline btn-circle align-middle">

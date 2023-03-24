@@ -1,29 +1,69 @@
 import { PuzzlePieceIcon, PlusIcon, MinusIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
-import { Column } from "components/dashboard/column"
+import { ColumnWrappers } from "components/dashboard/column"
 import Link from 'next/link'
 import { CreateWrapperModal } from 'components/dashboard/modals/createWrapper'
-import { useContractRead } from 'wagmi'
+import { useContractRead, useContractReads, useAccount } from 'wagmi'
 import { contracts } from 'components/helpers/contracts'
 
-export function AllTokens() {
-  // const { data, isError, isLoading } = useContractRead({
-  //   address: contracts.controller.address as `0x${string}`,
-  //   abi: contracts.controller.abi,
-  //   functionName: 'getHunger',
-  // })
+type Props = {
+  data: any
+  isError: boolean
+  isLoading: boolean
+}
 
-  var modules: any = [
-    {
-      name: 'rsEthereum',
-      symbol: 'rsETH',
-      image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=rsETH",
-      address: '0x741cB6A6a8dC16363...',
-      underlying: '0x741cB6A6a8dC16363...',
-      totalSupply: '17,729',
-      yourBalance: '0',
-    },
-  ]
+export function AllTokens() {
+  const { address, isConnecting, isDisconnected } = useAccount()
+  var wrappers: any = []
+
+  const allWrappersCall: Props = useContractRead({
+    address: contracts.controller.address as `0x${string}`,
+    abi: contracts.controller.abi,
+    functionName: 'allWrappers',
+  })
+
+  for (var i = 0; i < allWrappersCall.data.length; ++i) {
+    const wrapperContract: any = {
+      address: allWrappersCall.data[i],
+      abi: contracts.wrapper.abi,
+    }
+
+    const wrapperData: any = useContractReads({
+      contracts: [
+        {
+          ...wrapperContract,
+          functionName: 'name',
+        },
+        {
+          ...wrapperContract,
+          functionName: 'symbol',
+        },
+        {
+          ...wrapperContract,
+          functionName: 'wrapped',
+        },
+        {
+          ...wrapperContract,
+          functionName: 'totalSupply',
+        },
+        {
+          ...wrapperContract,
+          functionName: 'balanceOf',
+          args: [address],
+        },
+      ],
+    })
+
+    wrappers.push({
+      name: wrapperData.data[0],
+      symbol: wrapperData.data[1],
+      image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0],
+      address: allWrappersCall.data[i],
+      underlying: wrapperData.data[2],
+      totalSupply: wrapperData.data[3],
+      yourBalance: wrapperData.data[4],
+    })
+  }
 
   return (
     <>
@@ -43,7 +83,7 @@ export function AllTokens() {
               <div className="relative inline-block text-left">
                 <div className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                   <label htmlFor="create-wrapper-modal" className="btn btn-sm btn-primary btn-outline ml-4 align-middle">
-                      Create Wrapper
+                    Create Wrapper
                   </label>
                 </div>
               </div>
@@ -51,30 +91,30 @@ export function AllTokens() {
           </div>
 
           <div className="overflow-x-auto max-h-min">
-            {modules.length > 0 ?
+            {wrappers.length > 0 ?
               <table className="table w-full text-center">
                 <tbody>
-                  {modules.map((module: any, index: number) => (
+                  {wrappers.map((wrapper: any, index: number) => (
                     <tr key={index}>
                       <td className='text-left'>
-                        <Link href={'/module/' + module.name}>
+                        <Link href={'https://goerli.etherscan.io/address/' + wrapper.address}>
                           <div className="flex items-center space-x-3">
                             <div className="avatar">
                               <div className="mask mask-squircle w-12 h-12 rounded-full">
-                                <Image width={600} height={600} src={module.image} alt={"Image of module " + module.name} />
+                                <Image width={600} height={600} src={wrapper.image} alt={"Image of wrapper " + wrapper.name} />
                               </div>
                             </div>
                             <div>
-                              <div className="text-lg font-bold">{module.name}</div>
-                              <div className="text-base text-left text-gray-500">{module.symbol}</div>
+                              <div className="text-lg font-bold">{wrapper.name}</div>
+                              <div className="text-base text-left text-gray-500">{wrapper.symbol}</div>
                             </div>
                           </div>
                         </Link>
                       </td>
-                      <Column first="Address" second={module.address} third={''} slug={module.slug} />
-                      <Column first="Underlying" second={module.underlying} third={''} slug={module.slug} />
-                      <Column first="Total Supply" second={module.totalSupply + ' ' + module.symbol} third={''} slug={module.slug} />
-                      <Column first="Your balance" second={module.yourBalance + ' ' + module.symbol} third={''} slug={module.slug} />
+                      <ColumnWrappers first="Address" second={(wrapper.address.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + wrapper.address} />
+                      <ColumnWrappers first="Underlying" second={(wrapper.underlying.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + wrapper.underlying} />
+                      <ColumnWrappers first="Total Supply" second={wrapper.totalSupply + ' ' + wrapper.symbol} third={''} link={'#'} />
+                      <ColumnWrappers first="Your balance" second={wrapper.yourBalance + ' ' + wrapper.symbol} third={''} link={'#'} />
                       <td>
                         <div className="flex-none">
                           <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">

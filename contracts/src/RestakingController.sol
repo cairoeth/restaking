@@ -162,4 +162,15 @@ contract RestakingController {
 
         emit ModuleRemoved(module);
     }
+
+    /// @notice Returns all the created wrappers.
+    function allWrappers() public view returns (address[] memory) {
+        address[] memory w = new address[](wrappers.length);
+
+        for (uint256 i = 0; i < wrappers.length; i++) {
+            w[i] = wrappers[i];
+        }
+
+        return w;
+    }
 }

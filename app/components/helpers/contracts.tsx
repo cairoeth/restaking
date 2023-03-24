@@ -37,8 +37,55 @@ export const contracts = {
         inputs: [{ internalType: 'address', name: 'token', type: 'address' }],
         outputs: [],
       },
+      {
+        name: 'allWrappers',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ internalType: "address[]", name: "", type: "address[]" }
+        ],
+      },
     ]
   },
+  wrapper: {
+    abi: [
+      {
+        inputs: [],
+        name: "name",
+        outputs: [{internalType: "string", name: "", type: "string"}],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [],
+        name: "symbol",
+        outputs: [{internalType: "string", name: "", type: "string"}],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [],
+        name: "wrapped",
+        outputs: [{internalType: "address", name: "", type: "address"}],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [],
+        name: "totalSupply",
+        outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [{internalType: "address", name: "", type: "address"}],
+        name: "balanceOf",
+        outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+        stateMutability: "view",
+        type: "function"
+      },
+    ]
+  }
 }
 
 export const tokens = [
