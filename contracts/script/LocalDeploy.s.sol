@@ -17,6 +17,7 @@ contract LocalDeploy is Script {
 
         controller = new RestakingController();
         underlyingToken = new MockToken();
+        underlyingToken.mint(0xe7E60d2d6D7dF39810eE973Ae6187b01D4758344, 1000 ether);
 
         vm.stopBroadcast();
     }

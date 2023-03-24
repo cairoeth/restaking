@@ -16,6 +16,10 @@ export function CreateWrapper(wrapperAddress: any) {
   const { address, isConnecting, isDisconnected } = useAccount()
   var data: any = {}
 
+  if (isDisconnected) {
+    return null
+  }
+
   const wrapperContract: any = {
     address: wrapperAddress.wrapperAddress,
     abi: contracts.wrapper.abi,
@@ -126,7 +130,7 @@ export function AllTokens() {
           </div>
 
           <div className="overflow-x-auto max-h-min">
-            {allWrappersCall.data.length > 0 ?
+            {allWrappersCall.data != undefined  && allWrappersCall.data.length > 0 ?
               <table className="table w-full text-center">
                 <tbody>
                   {allWrappersCall.data.map((wrapperAddress: any, index: number) => (

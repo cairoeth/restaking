@@ -48,32 +48,95 @@ export function Assets({ title, percentage, worth, APR, _yield, assets }: Props)
         </div>
       </div>
 
-      <ul role="list" className="mt-3 space-y-3 text-sm leading-6 text-gray-600">
-        {assets.map((asset: any, assetIdx: any) => (
-          <li key={assetIdx} className="flex gap-x-3">
-            {title == 'Staked assets' ?
-              <span
-                className='place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full'
-                style={{ backgroundColor: asset.color }}
-                aria-hidden="true"
-              /> : ''}
+      {assets.length > 0 ?
+        <ul role="list" className="mt-3 space-y-3 text-sm leading-6 text-gray-600">
+          {assets.map((asset: any, assetIdx: any) => (
+            <li key={assetIdx} className="flex gap-x-3">
+              {title == 'Staked assets' ?
+                <span
+                  className='place-self-center h-2.5 w-2.5 flex-shrink-0 rounded-full'
+                  style={{ backgroundColor: asset.color }}
+                  aria-hidden="true"
+                /> : ''}
 
+              <div className="avatar">
+                <div className="h-8 w-8 rounded-full place-self-center">
+                  <Image width={600} height={600} src={asset.image} alt={asset.symbol} />
+                </div>
+              </div>
+
+              <div>
+                <p className="flex items-baseline">
+                  <span className="text-sm font-bold tracking-tight text-gray-900">{asset.amount} {asset.symbol}</span>
+                </p>
+                <p className="text-sm leading-6 text-gray-500">${asset.amountUSD} | {asset.percentage}%</p>
+              </div>
+
+            </li>
+          ))}
+        </ul>
+        : <>
+          <li key='placeholder1' className="flex gap-x-3">
             <div className="avatar">
               <div className="h-8 w-8 rounded-full place-self-center">
-                <Image width={600} height={600} src={asset.image} alt={asset.symbol} />
+                <Image width={600} height={600} style={{opacity: 0}} src='https://generative-placeholders.glitch.me/image?width=600&height=300&img=1' alt='Placeholder' />
               </div>
             </div>
 
             <div>
               <p className="flex items-baseline">
-                <span className="text-sm font-bold tracking-tight text-gray-900">{asset.amount} {asset.symbol}</span>
+                <span className="text-sm font-bold tracking-tight text-gray-900">ㅤ</span>
               </p>
-              <p className="text-sm leading-6 text-gray-500">${asset.amountUSD} | {asset.percentage}%</p>
+              <p className="text-sm leading-6 text-gray-500">ㅤ</p>
             </div>
 
           </li>
-        ))}
-      </ul>
+          <li key='placeholder2' className="flex gap-x-3">
+            <div className="avatar">
+              <div className="h-8 w-8 rounded-full place-self-center">
+                <Image width={600} height={600} style={{opacity: 0}} src='https://generative-placeholders.glitch.me/image?width=600&height=300&img=1' alt='Placeholder' />
+              </div>
+            </div>
+
+            <div>
+              <p className="flex items-baseline">
+                <span className="text-sm font-bold tracking-tight text-gray-900">ㅤ</span>
+              </p>
+              <p className="text-sm leading-6 text-gray-500">ㅤ</p>
+            </div>
+
+          </li>
+          <li key='placeholder3' className="flex gap-x-3">
+            <div className="avatar">
+              <div className="h-8 w-8 rounded-full place-self-center">
+                <Image width={600} height={600} style={{opacity: 0}} src='https://generative-placeholders.glitch.me/image?width=600&height=300&img=1' alt='Placeholder' />
+              </div>
+            </div>
+
+            <div>
+              <p className="flex items-baseline">
+                <span className="text-sm font-bold tracking-tight text-gray-900">ㅤ</span>
+              </p>
+              <p className="text-sm leading-6 text-gray-500">ㅤ</p>
+            </div>
+
+          </li>
+          <li key='placeholder4' className="flex gap-x-3">
+            <div className="avatar">
+              <div className="h-8 w-8 rounded-full place-self-center">
+                <Image width={600} height={600} style={{opacity: 0}} src='https://generative-placeholders.glitch.me/image?width=600&height=300&img=1' alt='Placeholder' />
+              </div>
+            </div>
+
+            <div>
+              <p className="flex items-baseline">
+                <span className="text-sm font-bold tracking-tight text-gray-900">ㅤ</span>
+              </p>
+              <p className="text-sm leading-6 text-gray-500">ㅤ</p>
+            </div>
+
+          </li>
+        </>}
     </div>
   )
 }

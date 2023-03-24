@@ -2,7 +2,7 @@ import { Assets } from "components/dashboard/assets"
 import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
-import { useContractRead, useContractReads, useBalance, useAccount } from 'wagmi'
+import { useContractRead, useContractReads, useBalance, useAccount, erc20ABI } from 'wagmi'
 import { tokens, contracts } from 'components/helpers/contracts'
 import { usePrice } from 'components/helpers/prices'
 import { BigNumber, ethers } from "ethers";
@@ -28,29 +28,70 @@ const pieOptions = {
   },
 };
 
-function useAvailableAssets(address: any) {
+function useAvailableAssets(wrappers: any, address: any) {
   var availableAssets: any = []
   var totalUSD = 0
   var APR = 7.7
 
-  for (var i = 0; i < tokens.length; ++i) {
+  if (wrappers == undefined) {
+    return { assets: [], worth: 0, APR: 0, yield: 0 }
+  }
+
+  for (var i = 0; i < wrappers.length; ++i) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isError, isLoading } = useBalance({
-      address: address,
-      token: tokens[i].address as any,
+    const wrapperCall: Props = useContractRead({
+      address: wrappers[i],
+      abi: contracts.wrapper.abi,
+      functionName: 'wrapped',
     })
 
-    const amountUSD: any = data?.formatted as any * tokens[i].price
+    const underlyingContract: any = {
+      address: wrapperCall.data,
+      abi: erc20ABI,
+    }
 
-    availableAssets.push({
-      symbol: tokens[i].symbol,
-      address: tokens[i].address,
-      image: tokens[i].image,
-      amount: data?.formatted,
-      amountUSD: amountUSD.toFixed(2),
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const underlyingData: any = useContractReads({
+      contracts: [
+        {
+          ...underlyingContract,
+          functionName: 'symbol',
+        },
+        {
+          ...underlyingContract,
+          functionName: 'balanceOf',
+          args: [address],
+        },
+        {
+          ...underlyingContract,
+          functionName: 'decimals',
+        },
+      ],
+      onError(error) {
+        console.log('Error', error)
+      },
     })
 
-    totalUSD += amountUSD
+    if (underlyingData.data == undefined) {
+      return { assets: [], worth: 0, APR: 0, yield: 0 }
+    }
+
+    const balance: any = ethers.utils.formatUnits(underlyingData.data[1], underlyingData.data[2])
+    if (balance > 0) {
+      const amountUSD: any = balance * 1
+
+      availableAssets.push({
+        symbol: underlyingData.data[0],
+        address: tokens[i].address,
+        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + underlyingData.data[0],
+        amount: balance,
+        amountUSD: amountUSD.toFixed(2),
+      })
+
+      totalUSD += amountUSD
+    } else {
+      continue
+    }
   }
 
   return {
@@ -61,26 +102,64 @@ function useAvailableAssets(address: any) {
   }
 }
 
-function useStakedAssets(address: any) {
+function useStakedAssets(wrappers: any, address: any) {
   var stakedAssets: any = []
   var totalUSD = 0
   var APR = 8.7
 
-  const data: any = StakedAssetsSimulator()
+  if (wrappers == undefined) {
+    return { assets: [], worth: 0, APR: 0, yield: 0 }
+  }
 
-  for (var i = 0; i < tokens.length; ++i) {
-    const amountUSD: any = data[tokens[i].address] as any * tokens[i].price
+  for (var i = 0; i < wrappers.length; ++i) {
+    const wrapperContract: any = {
+      address: wrappers[i],
+      abi: contracts.wrapper.abi,
+    }
 
-    stakedAssets.push({
-      symbol: tokens[i].symbol,
-      address: tokens[i].address,
-      image: tokens[i].image,
-      amount: data[tokens[i].address],
-      amountUSD: amountUSD.toFixed(2),
-      color: tokens[i].color,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const wrapperData: any = useContractReads({
+      contracts: [
+        {
+          ...wrapperContract,
+          functionName: 'symbol',
+        },
+        {
+          ...wrapperContract,
+          functionName: 'balanceOf',
+          args: [address],
+        },
+        {
+          ...wrapperContract,
+          functionName: 'decimals',
+        },
+      ],
+      onError(error) {
+        console.log('Error', error)
+      },
     })
 
-    totalUSD += amountUSD
+    if (wrapperData.data == undefined) {
+      return { assets: [], worth: 0, APR: 0, yield: 0 }
+    }
+
+    const balance: any = ethers.utils.formatUnits(wrapperData.data[1], wrapperData.data[2])
+    if (balance > 0) {
+      const amountUSD: any = balance * 1
+
+      stakedAssets.push({
+        symbol: wrapperData.data[0],
+        address: wrappers[i],
+        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0],
+        amount: balance,
+        amountUSD: amountUSD.toFixed(2),
+        color: 'xxx'
+      })
+
+      totalUSD += amountUSD
+    } else {
+      continue
+    }
   }
 
   return {
@@ -103,10 +182,8 @@ export function Portfolio() {
     functionName: 'allWrappers',
   })
 
-  
-
-  const availableAssets: any = useAvailableAssets(address)
-  const stakedAssets: any = useStakedAssets(address)
+  const availableAssets: any = useAvailableAssets(allWrappersCall.data, address)
+  const stakedAssets: any = useStakedAssets(allWrappersCall.data, address)
 
   const totalWorth: any = (parseFloat(availableAssets.worth) + parseFloat(stakedAssets.worth)).toFixed(2)
   const availablePercentrage: any = ((parseFloat(availableAssets.worth) / totalWorth) * 100).toFixed(2)
