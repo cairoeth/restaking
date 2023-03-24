@@ -211,7 +211,7 @@ export function Portfolio() {
     availableAssets.assets[i].percentage = assetPercentage
   }
 
-  // Add unstaked percentage
+  // Add unstaked percentage.
   pieValues.push(availablePercentrage.toString())
   // Add unstaked color
   pieColors.push('rgba(189, 195, 199, 1)')
