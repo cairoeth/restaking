@@ -28,6 +28,8 @@ abstract contract DeployBase is Script {
         );
 
         new BasicModule("Basic Module", "https://i.imgur.com/lAwEdqL.png");
+        new BasicModule("Basic Module 2", "https://i.imgur.com/lAwEdqL.png");
+        new BasicModule("Basic Module 3", "https://i.imgur.com/lAwEdqL.png");
 
         vm.stopBroadcast();
     }

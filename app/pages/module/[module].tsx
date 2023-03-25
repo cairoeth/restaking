@@ -6,13 +6,6 @@ import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'
 
-import { Bar } from "components/module/bar";
-import { Activity } from 'components/module/activity'
-import { SubscribeDelegateModal } from 'components/module/actions'
-
-import { useContractRead, useContractReads, useAccount } from 'wagmi'
-import { contracts } from "components/helpers/contracts"
-
 import { ModuleContent } from 'components/module/content'
 
 export default function App() {
@@ -30,7 +23,7 @@ export default function App() {
       <Navbar />
       <div className="px-4 py-4 sm:px-6 lg:px-8 bg-base-300">
         <div className='w-full grid-cols-3 gap-4 overflow-y-hidden overflow-x-scroll px-10 pt-1 pb-10 xl:grid xl:overflow-x-auto xl:px-4'>
-          <ModuleContent module={module} />
+          <ModuleContent module={module as string} />
         </div>
       </div>
       <Footer />

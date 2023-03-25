@@ -81,9 +81,9 @@ export function CreateWrapper(wrapperAddress: any) {
         <ColumnWrappers first="Your balance" second={yourBalance + ' ' + symbol} third={''} link={'#'} />
         <td>
           <div className="flex-none">
-            <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
+            <Link className="btn btn-sm btn-secondary btn-outline ml-4 align-middle" href='/modules'>
               Filter modules
-            </button>
+            </Link>
           </div>
         </td>
       </>
@@ -141,7 +141,7 @@ export function AllTokens() {
               <div className="flex w-full items-center justify-between space-x-6 p-6">
                 <div className="flex-1 truncate">
                   <div className="flex space-x-3 place-content-center">
-                    <div className="text-lg font-bold">No wrappers created yet. Be the first one to create!&nbsp;&nbsp;👀</div>
+                    <div className="text-lg">No wrappers created yet. Be the first one to create!&nbsp;&nbsp;👀</div>
                   </div>
                 </div>
               </div>

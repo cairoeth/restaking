@@ -4,12 +4,12 @@ type Props = {
   title: string;
   percentage: string;
   worth: string;
-  APR: string;
+  APY: string;
   _yield: string;
   assets: any;
 };
 
-export function Assets({ title, percentage, worth, APR, _yield, assets }: Props): JSX.Element {
+export function Assets({ title, percentage, worth, APY, _yield, assets }: Props): JSX.Element {
   return (
     <div className="w-84 flex flex-col justify-center">
       <div className="flex">
@@ -32,8 +32,8 @@ export function Assets({ title, percentage, worth, APR, _yield, assets }: Props)
 
       <div className="mt-2 text-sm flex justify-between">
         <dl className="flex">
-          <dt className="text-gray-500">APR&nbsp;</dt>
-          <dd className="font-semibold text-gray-500">{APR}%&nbsp;</dd>
+          <dt className="text-gray-500">APY&nbsp;</dt>
+          <dd className="font-semibold text-gray-500">{APY}%&nbsp;</dd>
 
           {title == 'Staked assets' ?
             <dt className="text-gray-500">| Yearly Yield&nbsp;</dt>

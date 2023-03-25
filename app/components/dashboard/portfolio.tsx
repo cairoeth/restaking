@@ -32,7 +32,7 @@ function useAvailableAssets(wrappers: any, address: any) {
   var underlyingContracts: any = []
   const chunkSize = 3;
   var totalUSD = 0
-  var APR = 7.7
+  var APY = 7.7
 
   for (var i = 0; i < wrappers?.length; ++i) {
     const wrapperIndividual: any = {
@@ -110,8 +110,8 @@ function useAvailableAssets(wrappers: any, address: any) {
   return {
     assets: availableAssets,
     worth: String(totalUSD.toFixed(2)),
-    APR: String(APR),
-    yield: String(((APR / 100) * totalUSD).toFixed(2)),
+    APY: String(APY),
+    yield: String(((APY / 100) * totalUSD).toFixed(2)),
   }
 }
 
@@ -120,7 +120,7 @@ function useStakedAssets(wrappers: any, address: any) {
   var wrapperContracts: any = []
   const chunkSize = 3;
   var totalUSD = 0
-  var APR = 8.7
+  var APY = 8.7
 
   for (var i = 0; i < wrappers?.length; ++i) {
     const wrapperIndividual_symbol: any = {
@@ -182,8 +182,8 @@ function useStakedAssets(wrappers: any, address: any) {
   return {
     assets: stakedAssets,
     worth: String(totalUSD.toFixed(2)),
-    APR: String(APR),
-    yield: String(((APR / 100) * totalUSD).toFixed(2)),
+    APY: String(APY),
+    yield: String(((APY / 100) * totalUSD).toFixed(2)),
   }
 }
 
@@ -270,7 +270,7 @@ export function Portfolio() {
 
         var text1 = "Total assets"
         var text2 = "$" + totalWorth
-        var text3 = "APR " + ((parseFloat(availableAssets.APR) + parseFloat(stakedAssets.APR)) / 2).toString() + "%"
+        var text3 = "APY " + ((parseFloat(availableAssets.APY) + parseFloat(stakedAssets.APY)) / 2).toString() + "%"
         var textY = height / 1.75;
         ctx.textAlign = 'left';
 
@@ -306,10 +306,10 @@ export function Portfolio() {
               <Doughnut options={pieOptions} data={pieData} plugins={piePlugins} />
             </div>
             <div>
-              <Assets title='Staked assets' percentage={stakedPercentage} worth={stakedAssets.worth} APR={stakedAssets.APR} _yield={stakedAssets.yield} assets={stakedAssets.assets} />
+              <Assets title='Staked assets' percentage={stakedPercentage} worth={stakedAssets.worth} APY={stakedAssets.APY} _yield={stakedAssets.yield} assets={stakedAssets.assets} />
             </div>
             <div>
-              <Assets title='Available to stake' percentage={availablePercentrage} worth={availableAssets.worth} APR={availableAssets.APR} _yield={availableAssets.yield} assets={availableAssets.assets} />
+              <Assets title='Available to stake' percentage={availablePercentrage} worth={availableAssets.worth} APY={availableAssets.APY} _yield={availableAssets.yield} assets={availableAssets.assets} />
             </div>
           </div>
         </div>

@@ -93,7 +93,7 @@ export function RestakedStake() {
             <div className="flex w-full items-center justify-between space-x-6 p-6">
               <div className="flex-1 truncate">
                 <div className="flex space-x-3 place-content-center">
-                  <div className="text-lg font-bold">Not restaked in any modules.</div>
+                  <div className="text-lg">Not restaked in any modules.</div>
                   <Link className="btn btn-sm btn-secondary btn-outline ml-4 align-middle" href='/modules'>
                     Restake now
                   </Link>

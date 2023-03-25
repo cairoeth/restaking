@@ -16,9 +16,9 @@ type Props = {
 export function Modules() {
   var moduleContracts: any = []
   var modules: any = []
-  var columnAmount: number = 0
   const chunkSize = 3
   const [hydrated, setHydrated] = useState(false);
+  const [columnAmount, setColumnAmount] = useState(0);
   const { chain, chains } = useNetwork()
 
   const allModulesCall: Props = useContractRead({
@@ -74,11 +74,13 @@ export function Modules() {
     })
   }
 
-  if (modules.length > 6) {
-    columnAmount = 6
-  } else {
-    columnAmount = modules.length
-  }
+  useEffect(() => {
+    if (modules.length > 3) {
+      setColumnAmount(3);
+    } else {
+      setColumnAmount(modules.length);
+    }
+  }, []);
 
   const filters = [
     {
@@ -185,10 +187,10 @@ export function Modules() {
 
           <div className="max-h-min pb-6">
             {allModulesCall.data != undefined && allModulesCall.data.length > 0 ?
-              <div className={"grid gap-6 sm:grid-cols-" + { columnAmount } + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
+              <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
                 {modules.map((module: any, moduleId: number) => (
                   <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
-                    <div className="flex items-center justify-between">
+                    <div className="flex w-full items-center justify-between">
                       <div className="relative inline-block text-left">
                         <div className="inline-flex">
                           <div className="flex w-full items-center justify-between space-x-6 p-6">
@@ -203,13 +205,13 @@ export function Modules() {
                                   {module.apyPerformance}%
                                 </span>
                               </div>
-                              <p className="mt-1 truncate text-sm text-gray-500">{module.blockchain}</p>
+                              <p className="mt-1 truncate text-sm text-gray-500">{(module.address.substring(0, 26)) + '...'}</p>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-baseline space-x-8">
+                      {/* <div className="flex items-baseline space-x-8">
                         <div className="relative inline-block">
                           <div className="group inline-flex items-center justify-center text-sm font-medium">
                             <div className="flex w-full items-center justify-between space-x-6 p-6">
@@ -222,7 +224,7 @@ export function Modules() {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                     <div>
                       <div className="-mt-px flex divide-x divide-gray-200">
@@ -240,7 +242,7 @@ export function Modules() {
               <div className="flex w-full items-center justify-between space-x-6 p-6">
                 <div className="flex-1 truncate">
                   <div className="flex space-x-3 place-content-center">
-                    <div className="text-lg font-bold">No modules added yet. Be the first one to add!&nbsp;&nbsp;👀</div>
+                    <div className="text-lg">No modules added yet. Be the first one to add!&nbsp;&nbsp;👀</div>
                   </div>
                 </div>
               </div>

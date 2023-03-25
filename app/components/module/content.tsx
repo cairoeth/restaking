@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Bar } from "components/module/bar";
 import { Activity } from 'components/module/activity'
-import { SubscribeDelegateModal } from 'components/module/actions'
+import { ActionModal } from 'components/module/actions'
 
 import { useContractRead, useContractReads, useAccount, useNetwork } from 'wagmi'
 import { contracts } from "components/helpers/contracts"
@@ -39,17 +39,16 @@ export function ModuleContent({ module }: { module: string }) {
 
   if (moduleData.data != undefined && moduleData.data[0] != null) {
     data = {
-      slug: moduleData.data[0],
-      symbol: 'OP',
-      blockchain: chain?.name,
       image: moduleData.data[2],
-      apr: '10.14',
+      name: moduleData.data[0],
+      address: module,
+      APY: '10.14',
       tvl: '8.33M',
-      rewards7: '8.144',
-      rewards14: '16.288',
-      rewards31: '32.576',
+      restakers: '69',
+      available: '8.144',
+      total: '16.288',
       slashing: '0.44',
-      validators: '69',
+      symbol: 'OP',
     }
   } else {
     return (
@@ -68,7 +67,7 @@ export function ModuleContent({ module }: { module: string }) {
         <Activity module={module} />
       </div>
       <div className="col-span-1 h-full">
-        <SubscribeDelegateModal restaked={false} _subscribeActive={true} module={data} />
+        <ActionModal _restakeActive={true} moduleAddress={module} />
       </div>
     </>
   );

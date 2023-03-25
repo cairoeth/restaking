@@ -8,7 +8,6 @@ import {
 } from 'wagmi'
 import useDebounce from 'components/helpers/useDebounce'
 import { contracts } from 'components/helpers/contracts'
-import { Popover } from '@headlessui/react'
 
 export function AddModuleModal() {
   const [address, setAddress] = React.useState('')
