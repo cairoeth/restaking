@@ -28,7 +28,7 @@ export function hexToRgbA(hex: string) {
 
 export const contracts = {
   controller: {
-    address: '0xA3f7BF5b0fa93176c260BBa57ceE85525De2BaF4',
+    address: '0x25A1DF485cFBb93117f12fc673D87D1cddEb845a',
     abi: [
       {
         name: 'createWrapper',
