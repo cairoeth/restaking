@@ -65,6 +65,11 @@ export const contracts = {
         outputs: [{ internalType: "address[]", name: "", type: "address[]" }
         ],
       },
+      {
+        inputs: [{indexed: true, internalType: "address", name: "module", type: "address"}],
+        name: "ModuleAdded",
+        type: "event"
+      }
     ]
   },
   wrapper: {
@@ -103,6 +108,14 @@ export const contracts = {
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         stateMutability: "view",
         type: "function"
+      },
+      {
+        name: 'decimals',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ internalType: "uint256", name: "", type: "uint256" }
+        ],
       },
     ]
   },

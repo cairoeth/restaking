@@ -3,6 +3,6 @@ pragma solidity ^0.8.18;
 
 import {DeployBase} from "./DeployBase.s.sol";
 
-contract DeployGnosis is DeployBase {
+contract DeployLocal is DeployBase {
     constructor() DeployBase() {}
 }
