@@ -3,8 +3,22 @@ import { Popover } from '@headlessui/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AddModuleModal } from 'components/modules/modals/addModule'
+import { useContractRead } from 'wagmi'
+import { tokens, contracts } from 'components/helpers/contracts'
+
+type Props = {
+  data: any
+  isError: boolean
+  isLoading: boolean
+}
 
 export function Modules() {
+  const allModulesCall: Props = useContractRead({
+    address: contracts.controller.address as `0x${string}`,
+    abi: contracts.controller.abi,
+    functionName: 'allModules',
+  })
+
   var modules = [
     {
       slug: 'Optimism',
@@ -134,34 +148,44 @@ export function Modules() {
           </div>
 
           <div className="max-h-min pb-8">
-            <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
-              {modules.map((module, moduleId) => (
-                <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
-                  <div className="flex w-full items-center justify-between space-x-6 p-6">
-                    <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.symbol} />
-                    <div className="flex-1 truncate">
-                      <div className="flex items-center space-x-3">
-                        <h3 className="truncate text-sm font-medium text-gray-900">{module.slug}</h3>
-                        <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                          {module.apy}%
-                        </span>
+            {allModulesCall.data != undefined && allModulesCall.data.length > 0 ?
+              <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
+                {modules.map((module, moduleId) => (
+                  <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
+                    <div className="flex w-full items-center justify-between space-x-6 p-6">
+                      <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.symbol} />
+                      <div className="flex-1 truncate">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="truncate text-sm font-medium text-gray-900">{module.slug}</h3>
+                          <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                            {module.apy}%
+                          </span>
+                        </div>
+                        <p className="mt-1 truncate text-sm text-gray-500">{module.blockchain}</p>
                       </div>
-                      <p className="mt-1 truncate text-sm text-gray-500">{module.blockchain}</p>
+                    </div>
+                    <div>
+                      <div className="-mt-px flex divide-x divide-gray-200">
+                        <div className="flex w-0 flex-1">
+                          <Link href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
+                            {/* <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" /> */}
+                            Explore
+                          </Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div className="-mt-px flex divide-x divide-gray-200">
-                      <div className="flex w-0 flex-1">
-                        <Link href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                          {/* <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" /> */}
-                          Explore
-                        </Link>
-                      </div>
-                    </div>
+                ))}
+              </div>
+              :
+              <div className="flex w-full items-center justify-between space-x-6 p-6">
+                <div className="flex-1 truncate">
+                  <div className="flex space-x-3 place-content-center">
+                    <div className="text-lg font-bold">No modules added yet. Be the first one to add!</div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            }
           </div>
         </div>
       </div>

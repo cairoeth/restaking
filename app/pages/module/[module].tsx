@@ -45,7 +45,7 @@ export default function App() {
             <Activity />
           </div>
           <div className="col-span-1 h-full">
-            <SubscribeDelegateModal enrolled={false} _subscribeActive={true} module={data} />
+            <SubscribeDelegateModal restaked={false} _subscribeActive={true} module={data} />
           </div>
           {/* <div className="col-span-3">
             <Validators />

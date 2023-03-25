@@ -1,9 +1,9 @@
 import { UserIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
-import { ColumnEnrolled } from "components/dashboard/column"
+import { ColumnRestaked } from "components/dashboard/column"
 import Link from 'next/link'
 
-export function EnrolledStake() {
+export function RestakedStake() {
   var modules: any = [
     // {
     //   slug: 'Optimism',
@@ -44,7 +44,7 @@ export function EnrolledStake() {
       <div className="card-body">
         <h2 className="card-title">
           <UserIcon className="w-6 h-6" />
-          Enrolled stake
+          Restaked assets
         </h2>
         <div className="overflow-x-auto max-h-min">
           {modules.length > 0 ?
@@ -67,11 +67,11 @@ export function EnrolledStake() {
                         </div>
                       </Link>
                     </td>
-                    <ColumnEnrolled first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
-                    <ColumnEnrolled first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
-                    <ColumnEnrolled first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
-                    <ColumnEnrolled first="Accuracy" second={module.accuracy + '%'} third={module.accuracyPerformance + '%'} slug={module.slug} />
-                    <ColumnEnrolled first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
+                    <ColumnRestaked first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
+                    <ColumnRestaked first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
+                    <ColumnRestaked first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
+                    <ColumnRestaked first="Accuracy" second={module.accuracy + '%'} third={module.accuracyPerformance + '%'} slug={module.slug} />
+                    <ColumnRestaked first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
                     <td>
                       <div className="flex-none">
                         <button className="btn btn-sm btn-primary btn-outline btn-circle align-middle">
@@ -89,7 +89,18 @@ export function EnrolledStake() {
                 ))}
               </tbody>
             </table>
-            : 'No enrolled modules'}
+            :
+            <div className="flex w-full items-center justify-between space-x-6 p-6">
+              <div className="flex-1 truncate">
+                <div className="flex space-x-3 place-content-center">
+                  <div className="text-lg font-bold">Not restaked in any modules.</div>
+                  <Link className="btn btn-sm btn-secondary btn-outline ml-4 align-middle" href='/modules'>
+                    Restake now
+                  </Link>
+                </div>
+              </div>
+            </div>
+          }
         </div>
       </div>
     </div>

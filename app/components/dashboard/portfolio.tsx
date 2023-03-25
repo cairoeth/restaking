@@ -91,7 +91,7 @@ function useAvailableAssets(wrappers: any, address: any) {
 
       availableAssets.push({
         symbol: chunk[0],
-        address: tokens[i].address,
+        // address: tokens[i].address,
         image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + chunk[0],
         amount: balance,
         amountUSD: amountUSD.toFixed(2),

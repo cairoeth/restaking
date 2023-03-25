@@ -174,4 +174,15 @@ contract RestakingController {
 
         return w;
     }
+
+    /// @notice Returns all the added modules.
+    function allModules() public view returns (address[] memory) {
+        address[] memory m = new address[](modules.length);
+
+        for (uint256 i = 0; i < modules.length; i++) {
+            m[i] = modules[i];
+        }
+
+        return m;
+    }
 }

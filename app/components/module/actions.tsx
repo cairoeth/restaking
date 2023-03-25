@@ -19,7 +19,7 @@ type PropsDelegate = {
 };
 
 type PropsModal = {
-  enrolled: boolean;
+  restaked: boolean;
   _subscribeActive: boolean;
   module: any;
 };
@@ -80,7 +80,7 @@ function Subscribe({ status, module, supplied, supplyAPY, minCollateraliation }:
         :
         <div>
           <div className="items-center space-x-3">
-            <h3 className="truncate text-lg font-bold">You must be enrolled as a validator to subscribe!</h3>
+            <h3 className="truncate text-lg font-bold">You must be restaked as a validator to subscribe!</h3>
           </div>
           <Link href='/enroll' className="btn btn-primary btn-block space-x-2 mt-4">
             <div className="flex items-center">
@@ -147,7 +147,7 @@ function Delegate({supplied, module, supplyAPY, minCollateraliation}: PropsDeleg
   )
 }
 
-export function SubscribeDelegateModal({ enrolled, _subscribeActive, module }: PropsModal): JSX.Element {
+export function SubscribeDelegateModal({ restaked, _subscribeActive, module }: PropsModal): JSX.Element {
   const [supplied, setSupplied] = React.useState(0);
   const [supplyAPY, setSupplyAPY] = React.useState(0);
   const [minCollateraliation, setMinCollateraliation] = React.useState(0);
@@ -172,7 +172,7 @@ export function SubscribeDelegateModal({ enrolled, _subscribeActive, module }: P
         subscribeActive ?
           <div className="card bg-base-100 rounded-tl-none shadow-xl">
             <div className="card-body pt-5">
-              <Subscribe status={enrolled} module={module} supplied={supplied} supplyAPY={supplyAPY} minCollateraliation={minCollateraliation} />
+              <Subscribe status={restaked} module={module} supplied={supplied} supplyAPY={supplyAPY} minCollateraliation={minCollateraliation} />
             </div>
           </div> :
           <div className="card bg-base-100 rounded-tl-none shadow-xl">

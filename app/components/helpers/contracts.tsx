@@ -52,6 +52,14 @@ export const contracts = {
         inputs: [{ internalType: 'address', name: 'module', type: 'address' }],
         outputs: [],
       },
+      {
+        name: 'allModules',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ internalType: "address[]", name: "", type: "address[]" }
+        ],
+      },
     ]
   },
   wrapper: {
