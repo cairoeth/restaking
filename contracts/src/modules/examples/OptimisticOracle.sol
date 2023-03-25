@@ -1,8 +1,8 @@
 // // SPDX-License-Identifier: BUSL-1.1
 // pragma solidity ^0.8.18;
 
-// import "solmate/utils/FixedPointMathLib.sol";
-// import "solmate/utils/ReentrancyGuard.sol";
+// import "@solmate/utils/FixedPointMathLib.sol";
+// import "@solmate/utils/ReentrancyGuard.sol";
 // import "../../RestakingController.sol";
 
 // contract OptimisticOracle {
@@ -137,15 +137,13 @@
 //     /// @param pubkey Public key of the proposer
 //     /// @param answer Answer data
 //     /// @param signature Signature of the proposer
-//     /// @param publicKeyYCoordinate The y coordinate of the public key
-//     /// @param signatureYCoordinate The y coordinate of the signature
+//     /// @param token Token to restake
 //     function propose(
 //         uint256 requestId,
 //         bytes calldata pubkey,
 //         bytes32 answer,
 //         bytes calldata signature,
-//         DepositVerifier.Fp calldata publicKeyYCoordinate,
-//         DepositVerifier.Fp2 calldata signatureYCoordinate
+//         address token
 //     ) external notEmptyAnswer(answer) {
 //         if (isProposed(requestId)) revert RequestAlreadyProposed(requestId);
 
@@ -155,15 +153,16 @@
 //         );
 
 //         // The restaking controller contract verifies the signature for us
-//         restakingController.restake(
-//             address(this),
-//             pubkey,
-//             requests[requestId].bondSize,
-//             ancillaryData,
-//             signature,
-//             publicKeyYCoordinate,
-//             signatureYCoordinate
-//         );
+//         // restakingController.restake(
+//         //     address(this),
+//         //     pubkey,
+//         //     requests[requestId].bondSize,
+//         //     ancillaryData,
+//         //     signature,
+//         //     token
+//         // );
+
+//         restakingController.restake(token, 1 ether, address(this));
 
 //         // We set the proposer's answer and pubkey in the request
 //         requests[requestId].proposerAnswer = answer;
@@ -219,15 +218,13 @@
 //     /// @param pubkey Public key of the disputer
 //     /// @param answer Answer data
 //     /// @param signature Signature of the disputer
-//     /// @param publicKeyYCoordinate The y coordinate of the public key
-//     /// @param signatureYCoordinate The y coordinate of the signature
+//     /// @param token Token to restake
 //     function dispute(
 //         uint256 requestId,
 //         bytes calldata pubkey,
 //         bytes32 answer,
 //         bytes calldata signature,
-//         DepositVerifier.Fp calldata publicKeyYCoordinate,
-//         DepositVerifier.Fp2 calldata signatureYCoordinate
+//         address token
 //     ) external notEmptyAnswer(answer) {
 //         if (isDisputed(requestId)) revert RequestAlreadyDisputed(requestId);
 //         if (answer == requests[requestId].proposerAnswer)
@@ -238,15 +235,16 @@
 //         );
 
 //         // Set up bond
-//         restakingController.restake(
-//             address(this),
-//             pubkey,
-//             requests[requestId].bondSize,
-//             ancillaryData,
-//             signature,
-//             publicKeyYCoordinate,
-//             signatureYCoordinate
-//         );
+//         // restakingController.restake(
+//         //     address(this),
+//         //     pubkey,
+//         //     requests[requestId].bondSize,
+//         //     ancillaryData,
+//         //     signature,
+//         //     token
+//         // );
+
+//         restakingController.restake(token, 1 ether, address(this));
 
 //         // Trigger voting
 //         requests[requestId].disputerAnswer = answer;
@@ -354,16 +352,22 @@
 //     /// @dev Reward the proposer
 //     /// @param requestId ID of request
 //     function _rewardProposer(uint256 requestId) internal {
+//         // restakingController.unrestake(
+//         //     address(this),
+//         //     requests[requestId].proposerPubkey,
+//         //     requests[requestId].bondSize + requests[requestId].reward
+//         // );
+
 //         restakingController.unrestake(
 //             address(this),
-//             requests[requestId].proposerPubkey,
-//             requests[requestId].bondSize + requests[requestId].reward
+//             requests[requestId].bondSize + requests[requestId].reward,
+//             address(this)
 //         );
 
 //         // NOTE: can this function silently fail?
-//         restakingController.rewardWithETH{
-//             value: requests[requestId].reward * (1 - settlerReward)
-//         }(requests[requestId].proposerPubkey);
+//         // restakingController.rewardWithETH{
+//         //     value: requests[requestId].reward * (1 - settlerReward)
+//         // }(requests[requestId].proposerPubkey);
 //     }
 
 //     /// @dev Reward and slash

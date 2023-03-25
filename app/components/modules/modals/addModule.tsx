@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ArrowUturnRightIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -7,8 +7,9 @@ import {
 } from 'wagmi'
 import useDebounce from 'components/helpers/useDebounce'
 import { contracts } from 'components/helpers/contracts'
+import { Popover } from '@headlessui/react'
 
-export function CreateWrapperModal() {
+export function AddModuleModal() {
   const [address, setAddress] = React.useState('')
   const debouncedAddress = useDebounce(address)
 
@@ -19,7 +20,7 @@ export function CreateWrapperModal() {
   } = usePrepareContractWrite({
     address: contracts.controller.address as `0x${string}`,
     abi: contracts.controller.abi,
-    functionName: 'createWrapper',
+    functionName: 'addModule',
     args: [debouncedAddress],
     enabled: Boolean(debouncedAddress),
   })
@@ -35,11 +36,11 @@ export function CreateWrapperModal() {
 
   return (
     <>
-      <input type="checkbox" id="create-wrapper-modal" className="modal-toggle" />
-      <label htmlFor="create-wrapper-modal" className="modal cursor-pointer">
+      <input type="checkbox" id="add-module-modal" className="modal-toggle" />
+      <label htmlFor="add-module-modal" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
-          <h3 className="text-lg font-bold">Create Wrapper</h3>
-          <p className="py-4">Create a rsToken wrapper for any ERC20 to use for restaking.</p>
+          <h3 className="text-lg font-bold">Add a module</h3>
+          <p className="py-4">Add a module to the restaking platform. Contract must follow minimum interface.</p>
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -48,7 +49,7 @@ export function CreateWrapperModal() {
           >
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Repay Amount</span>
+                <span className="label-text">Contract module address</span>
               </label>
               <label className="input-group">
                 <input
@@ -65,10 +66,10 @@ export function CreateWrapperModal() {
 
             <button disabled={!write || isLoading} className="mt-6 btn btn-block space-x-2">
               <div className="inline-flex items-center">
-                {isLoading ? 'Creating...' :
+                {isLoading ? 'Adding...' :
                   <>
-                    <ArrowUturnRightIcon className="w-6 h-6 mr-2" />
-                    Create
+                    <PlusCircleIcon className="w-6 h-6 mr-2" />
+                    Add
                   </>
                 }
               </div>
@@ -76,7 +77,7 @@ export function CreateWrapperModal() {
 
             {isSuccess && (
               <div>
-                Successfully created wrapper!
+                Successfully added module!
                 <div>
                   <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
                 </div>

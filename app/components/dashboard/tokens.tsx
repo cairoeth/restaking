@@ -87,7 +87,7 @@ export function CreateWrapper(wrapperAddress: any) {
         <td>
           <div className="flex-none">
             <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
-              Explore modules
+              Filter modules
             </button>
           </div>
         </td>

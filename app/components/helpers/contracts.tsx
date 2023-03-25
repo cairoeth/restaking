@@ -45,6 +45,13 @@ export const contracts = {
         outputs: [{ internalType: "address[]", name: "", type: "address[]" }
         ],
       },
+      {
+        name: 'addModule',
+        type: 'function',
+        stateMutability: 'nonpayable',
+        inputs: [{ internalType: 'address', name: 'module', type: 'address' }],
+        outputs: [],
+      },
     ]
   },
   wrapper: {

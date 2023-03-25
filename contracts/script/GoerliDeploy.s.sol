@@ -16,7 +16,7 @@ contract GoerliDeploy is Script {
     function run() public {
         string memory seedPhrase = vm.readFile(".secret");
         uint256 privateKey = vm.deriveKey(seedPhrase, 0);
-        address DEPLOYER = vm.rememberKey(privateKey);
+        // address DEPLOYER = vm.rememberKey(privateKey);
 
         vm.startBroadcast(privateKey);
 
