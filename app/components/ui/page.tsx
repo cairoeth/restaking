@@ -85,7 +85,9 @@ export function Page({ children }: Props): JSX.Element {
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
-        {children}
+        <div className="min-h-screen">
+          {children}
+        </div>
       </ConnectKitProvider>
     </WagmiConfig>
   );

@@ -50,7 +50,7 @@ export function CreateWrapper(wrapperAddress: any) {
     },
   })
 
-  if (wrapperData.isSuccess) {
+  if (wrapperData.data[0] != null) {
     data.name = wrapperData.data[0]
     data.symbol = wrapperData.data[1]
     data.image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0]

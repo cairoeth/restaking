@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
 import { useContractRead, useContractReads, useAccount, erc20ABI } from 'wagmi'
-import { tokens, contracts } from 'components/helpers/contracts'
+import { tokens, contracts, stringToColour, hexToRgbA } from 'components/helpers/contracts'
 import { ethers } from "ethers";
 
 type Props = {
@@ -82,7 +82,7 @@ function useAvailableAssets(wrappers: any, address: any) {
   })
 
   for (let i = 0; i < underlyingData.data?.length; i += chunkSize) {
-    const chunk = underlyingData.data.slice(i, i + chunkSize);
+    const chunk: any = underlyingData.data.slice(i, i + chunkSize);
 
     const balance: any = ethers.utils.formatUnits(chunk[1], chunk[2])
 
@@ -113,55 +113,56 @@ function useAvailableAssets(wrappers: any, address: any) {
 
 function useStakedAssets(wrappers: any, address: any) {
   var stakedAssets: any = []
+  var wrapperContracts: any = []
+  const chunkSize = 3;
   var totalUSD = 0
   var APR = 8.7
 
-  if (wrappers == undefined) {
-    return { assets: [], worth: 0, APR: 0, yield: 0 }
+  for (var i = 0; i < wrappers.data?.length; ++i) {
+    const wrapperIndividual_symbol: any = {
+      address: wrappers.data[i],
+      abi: contracts.wrapper.abi,
+      functionName: 'symbol',
+    }
+
+    const wrapperIndividual_balanceOf: any = {
+      address: wrappers.data[i],
+      abi: contracts.wrapper.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    }
+
+    const wrapperIndividual_decimals: any = {
+      address: wrappers.data[i],
+      abi: contracts.wrapper.abi,
+      functionName: 'decimals',
+    }
+
+    wrapperContracts.push(wrapperIndividual_symbol, wrapperIndividual_balanceOf, wrapperIndividual_decimals)
   }
 
-  for (var i = 0; i < wrappers.length; ++i) {
-    const wrapperContract: any = {
-      address: wrappers[i],
-      abi: contracts.wrapper.abi,
-    }
+  const wrappersData: any = useContractReads({
+    contracts: wrapperContracts,
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
 
-    const wrapperData: any = useContractReads({
-      contracts: [
-        {
-          ...wrapperContract,
-          functionName: 'symbol',
-        },
-        {
-          ...wrapperContract,
-          functionName: 'balanceOf',
-          args: [address],
-        },
-        {
-          ...wrapperContract,
-          functionName: 'decimals',
-        },
-      ],
-      onError(error) {
-        console.log('Error', error)
-      },
-    })
+  for (let i = 0; i < wrappersData.data?.length; i += chunkSize) {
+    const chunk: any = wrappersData.data.slice(i, i + chunkSize);
 
-    if (wrapperData.data == undefined) {
-      return { assets: [], worth: 0, APR: 0, yield: 0 }
-    }
+    const balance: any = ethers.utils.formatUnits(chunk[1], chunk[2])
 
-    const balance: any = ethers.utils.formatUnits(wrapperData.data[1], wrapperData.data[2])
     if (balance > 0) {
       const amountUSD: any = balance * 1
 
       stakedAssets.push({
-        symbol: wrapperData.data[0],
-        address: wrappers[i],
-        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0],
+        symbol: chunk[0],
+        // address: tokens[i].address,
+        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + chunk[0],
         amount: balance,
         amountUSD: amountUSD.toFixed(2),
-        color: 'xxx'
+        color: hexToRgbA(stringToColour(chunk[0]))
       })
 
       totalUSD += amountUSD
