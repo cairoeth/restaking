@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
 import { useContractRead, useContractReads, useAccount, erc20ABI } from 'wagmi'
-import { tokens, contracts, stringToColour, hexToRgbA } from 'components/helpers/contracts'
+import { contracts, stringToColour, hexToRgbA } from 'components/helpers/contracts'
 import { ethers } from "ethers";
 
 type Props = {
@@ -34,7 +34,7 @@ function useAvailableAssets(wrappers: any, address: any) {
   var totalUSD = 0
   var APR = 7.7
 
-  for (var i = 0; i < wrappers.length; ++i) {
+  for (var i = 0; i < wrappers?.length; ++i) {
     const wrapperIndividual: any = {
       address: wrappers[i],
       abi: contracts.wrapper.abi,
@@ -84,6 +84,10 @@ function useAvailableAssets(wrappers: any, address: any) {
   for (let i = 0; i < underlyingData.data?.length; i += chunkSize) {
     const chunk: any = underlyingData.data.slice(i, i + chunkSize);
 
+    if (chunk[0] == null) {
+      continue
+    }
+
     const balance: any = ethers.utils.formatUnits(chunk[1], chunk[2])
 
     if (balance > 0) {
@@ -118,22 +122,22 @@ function useStakedAssets(wrappers: any, address: any) {
   var totalUSD = 0
   var APR = 8.7
 
-  for (var i = 0; i < wrappers.data?.length; ++i) {
+  for (var i = 0; i < wrappers?.length; ++i) {
     const wrapperIndividual_symbol: any = {
-      address: wrappers.data[i],
+      address: wrappers[i],
       abi: contracts.wrapper.abi,
       functionName: 'symbol',
     }
 
     const wrapperIndividual_balanceOf: any = {
-      address: wrappers.data[i],
+      address: wrappers[i],
       abi: contracts.wrapper.abi,
       functionName: 'balanceOf',
       args: [address],
     }
 
     const wrapperIndividual_decimals: any = {
-      address: wrappers.data[i],
+      address: wrappers[i],
       abi: contracts.wrapper.abi,
       functionName: 'decimals',
     }
@@ -150,6 +154,10 @@ function useStakedAssets(wrappers: any, address: any) {
 
   for (let i = 0; i < wrappersData.data?.length; i += chunkSize) {
     const chunk: any = wrappersData.data.slice(i, i + chunkSize);
+
+    if (chunk[0] == null) {
+      continue
+    }
 
     const balance: any = ethers.utils.formatUnits(chunk[1], chunk[2])
 

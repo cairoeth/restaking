@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { AddModuleModal } from 'components/modules/modals/addModule'
 import { useContractRead } from 'wagmi'
-import { tokens, contracts } from 'components/helpers/contracts'
+import { contracts } from 'components/helpers/contracts'
 
 type Props = {
   data: any
@@ -181,7 +181,7 @@ export function Modules() {
               <div className="flex w-full items-center justify-between space-x-6 p-6">
                 <div className="flex-1 truncate">
                   <div className="flex space-x-3 place-content-center">
-                    <div className="text-lg font-bold">No modules added yet. Be the first one to add!</div>
+                    <div className="text-lg font-bold">No modules added yet. Be the first one to add!&nbsp;&nbsp;👀</div>
                   </div>
                 </div>
               </div>

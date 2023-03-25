@@ -126,7 +126,7 @@ export function AllTokens() {
           </div>
 
           <div className="overflow-x-auto max-h-min">
-            {allWrappersCall.data != undefined  && allWrappersCall.data.length > 0 ?
+            {allWrappersCall.data != undefined && allWrappersCall.data.length > 0 ?
               <table className="table w-full text-center">
                 <tbody>
                   {allWrappersCall.data.map((wrapperAddress: any, index: number) => (
@@ -136,7 +136,15 @@ export function AllTokens() {
                   ))}
                 </tbody>
               </table>
-              : 'No wrappers created'}
+              :
+              <div className="flex w-full items-center justify-between space-x-6 p-6">
+                <div className="flex-1 truncate">
+                  <div className="flex space-x-3 place-content-center">
+                    <div className="text-lg font-bold">No wrappers created yet. Be the first one to create!&nbsp;&nbsp;👀</div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>

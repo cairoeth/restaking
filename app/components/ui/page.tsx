@@ -1,5 +1,5 @@
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { goerli, localhost, foundry } from "wagmi/chains";
+import { goerli } from "wagmi/chains";
 import { ConnectKitProvider } from "connectkit";
 import { infuraProvider } from 'wagmi/providers/infura'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
