@@ -66,8 +66,7 @@ export function Modules() {
     modules.push({
       name: chunk[0],
       image: chunk[1],
-      tokens: chunk[2],
-      symbol: 'ETH',
+      tokens: chunk[2].toString(),
       apy: '7.69',
       apyPerformance: '+4.79',
       blockchain: chain?.name,
@@ -184,21 +183,45 @@ export function Modules() {
             </Popover.Group>
           </div>
 
-          <div className="max-h-min pb-8">
+          <div className="max-h-min pb-6">
             {allModulesCall.data != undefined && allModulesCall.data.length > 0 ?
               <div className={"grid gap-6 sm:grid-cols-" + { columnAmount } + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
                 {modules.map((module: any, moduleId: number) => (
                   <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
-                    <div className="flex w-full items-center justify-between space-x-6 p-6">
-                      <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.name} />
-                      <div className="flex-1 truncate">
-                        <div className="flex items-center space-x-3">
-                          <h3 className="truncate text-sm font-medium text-gray-900">{module.name}</h3>
-                          <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                            {module.apy}%
-                          </span>
+                    <div className="flex items-center justify-between">
+                      <div className="relative inline-block text-left">
+                        <div className="inline-flex">
+                          <div className="flex w-full items-center justify-between space-x-6 p-6">
+                            <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.name} />
+                            <div className="flex-1 truncate">
+                              <div className="flex items-center space-x-3">
+                                <h3 className="truncate text-sm font-medium text-gray-900">{module.name}</h3>
+                                <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                  APY {module.apy}%
+                                </span>
+                                <span className="justify-end place-items-end place-self-end inline-block flex-shrink-0 rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                  {module.apyPerformance}%
+                                </span>
+                              </div>
+                              <p className="mt-1 truncate text-sm text-gray-500">{module.blockchain}</p>
+                            </div>
+                          </div>
                         </div>
-                        <p className="mt-1 truncate text-sm text-gray-500">{module.blockchain}</p>
+                      </div>
+
+                      <div className="flex items-baseline space-x-8">
+                        <div className="relative inline-block">
+                          <div className="group inline-flex items-center justify-center text-sm font-medium">
+                            <div className="flex w-full items-center justify-between space-x-6 p-6">
+                              <div className="flex-1 truncate">
+                                <div className="flex items-center space-x-3">
+                                  <h3 className="truncate text-sm font-medium text-gray-900 text-right">{(module.address.substring(0, 18)) + '...'}</h3>
+                                </div>
+                                <p className="mt-1 truncate text-sm text-gray-500 text-right">{"[" + module.tokens + "]"}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div>
