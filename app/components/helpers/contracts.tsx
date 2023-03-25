@@ -67,35 +67,60 @@ export const contracts = {
       {
         inputs: [],
         name: "name",
-        outputs: [{internalType: "string", name: "", type: "string"}],
+        outputs: [{ internalType: "string", name: "", type: "string" }],
         stateMutability: "view",
         type: "function"
       },
       {
         inputs: [],
         name: "symbol",
-        outputs: [{internalType: "string", name: "", type: "string"}],
+        outputs: [{ internalType: "string", name: "", type: "string" }],
         stateMutability: "view",
         type: "function"
       },
       {
         inputs: [],
         name: "wrapped",
-        outputs: [{internalType: "address", name: "", type: "address"}],
+        outputs: [{ internalType: "address", name: "", type: "address" }],
         stateMutability: "view",
         type: "function"
       },
       {
         inputs: [],
         name: "totalSupply",
-        outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
         stateMutability: "view",
         type: "function"
       },
       {
-        inputs: [{internalType: "address", name: "", type: "address"}],
+        inputs: [{ internalType: "address", name: "", type: "address" }],
         name: "balanceOf",
-        outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+        outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+        stateMutability: "view",
+        type: "function"
+      },
+    ]
+  },
+  module: {
+    abi: [
+      {
+        inputs: [],
+        name: "name",
+        outputs: [{ internalType: "string", name: "", type: "string" }],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [],
+        name: "image",
+        outputs: [{ internalType: "string", name: "", type: "string" }],
+        stateMutability: "view",
+        type: "function"
+      },
+      {
+        inputs: [],
+        name: "getTokens",
+        outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
         stateMutability: "view",
         type: "function"
       },

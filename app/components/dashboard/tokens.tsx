@@ -14,7 +14,6 @@ type Props = {
 
 export function CreateWrapper(wrapperAddress: any) {
   const { address, isConnecting, isDisconnected } = useAccount()
-  var data: any = {}
 
   const wrapperContract: any = {
     address: wrapperAddress.wrapperAddress,
@@ -50,36 +49,36 @@ export function CreateWrapper(wrapperAddress: any) {
     },
   })
 
-  if (wrapperData.data[0] != null) {
-    data.name = wrapperData.data[0]
-    data.symbol = wrapperData.data[1]
-    data.image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0]
-    data.address = wrapperAddress.wrapperAddress
-    data.underlying = wrapperData.data[2]
-    data.totalSupply = wrapperData.data[3]
-    data.yourBalance = wrapperData.data[4]
+  if (wrapperData.data != undefined && wrapperData.data[0] != null) {
+    const name = wrapperData.data[0]
+    const symbol = wrapperData.data[1]
+    const image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + name
+    const addressWrapper = wrapperAddress.wrapperAddress
+    const underlying = wrapperData.data[2]
+    const totalSupply = wrapperData.data[3]
+    const yourBalance = wrapperData.data[4]
 
     return (
       <>
         <td className='text-left'>
-          <Link href={'https://goerli.etherscan.io/address/' + data.address}>
+          <Link href={'https://goerli.etherscan.io/address/' + addressWrapper}>
             <div className="flex items-center space-x-3">
               <div className="avatar">
                 <div className="mask mask-squircle w-12 h-12 rounded-full">
-                  <Image width={600} height={600} src={data.image} alt={"Image of wrapper " + data.name} />
+                  <Image width={600} height={600} src={image} alt={"Image of wrapper " + name} />
                 </div>
               </div>
               <div>
-                <div className="text-lg font-bold">{data.name}</div>
-                <div className="text-base text-left text-gray-500">{data.symbol}</div>
+                <div className="text-lg font-bold">{name}</div>
+                <div className="text-base text-left text-gray-500">{symbol}</div>
               </div>
             </div>
           </Link>
         </td>
-        <ColumnWrappers first="Address" second={(data.address.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + data.address} />
-        <ColumnWrappers first="Underlying" second={(data.underlying.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + data.underlying} />
-        <ColumnWrappers first="Total Supply" second={data.totalSupply + ' ' + data.symbol} third={''} link={'#'} />
-        <ColumnWrappers first="Your balance" second={data.yourBalance + ' ' + data.symbol} third={''} link={'#'} />
+        <ColumnWrappers first="Address" second={(addressWrapper.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + addressWrapper} />
+        <ColumnWrappers first="Underlying" second={(underlying.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + underlying} />
+        <ColumnWrappers first="Total Supply" second={totalSupply + ' ' + symbol} third={''} link={'#'} />
+        <ColumnWrappers first="Your balance" second={yourBalance + ' ' + symbol} third={''} link={'#'} />
         <td>
           <div className="flex-none">
             <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">

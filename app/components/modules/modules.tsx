@@ -3,8 +3,9 @@ import { Popover } from '@headlessui/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { AddModuleModal } from 'components/modules/modals/addModule'
-import { useContractRead } from 'wagmi'
+import { useContractRead, useContractReads, useNetwork } from 'wagmi'
 import { contracts } from 'components/helpers/contracts'
+import { useState, useEffect } from "react";
 
 type Props = {
   data: any
@@ -13,40 +14,67 @@ type Props = {
 }
 
 export function Modules() {
+  var moduleContracts: any = []
+  var modules: any = []
+  var columnAmount: number = 0
+  const chunkSize = 3
+  const [hydrated, setHydrated] = useState(false);
+
+  const { chain, chains } = useNetwork()
+
   const allModulesCall: Props = useContractRead({
     address: contracts.controller.address as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'allModules',
   })
 
-  var modules = [
-    {
-      slug: 'Optimism',
-      symbol: 'OP',
-      blockchain: 'Ethereum Mainnet',
-      image: 'https://gateway.optimism.io/static/media/optimism.caeb9392.svg',
-      apy: '7.69',
-      apyPerformance: '+4.79'
-    },
-    {
-      slug: 'UMA',
-      symbol: 'UMA',
-      blockchain: 'Ethereum Mainnet',
-      image: 'https://storage.googleapis.com/ethglobal-api-production/organizations%2Ffp1x1%2Flogo%2F1664750381528_uma.jpeg',
-      apy: '15.84',
-      apyPerformance: '+10.27'
-    },
-    {
-      slug: 'UMA',
-      symbol: 'UMA',
-      blockchain: 'Ethereum Mainnet',
-      image: 'https://storage.googleapis.com/ethglobal-api-production/organizations%2Ffp1x1%2Flogo%2F1664750381528_uma.jpeg',
-      apy: '15.84',
-      apyPerformance: '+10.27'
-    },
-  ]
+  for (var i = 0; i < allModulesCall.data?.length; ++i) {
+    const moduleIndividual_name: any = {
+      address: allModulesCall.data[i],
+      abi: contracts.module.abi,
+      functionName: 'name',
+    }
 
-  let columnAmount
+    const moduleIndividual_image: any = {
+      address: allModulesCall.data[i],
+      abi: contracts.module.abi,
+      functionName: 'image',
+    }
+
+    const moduleIndividual_tokens: any = {
+      address: allModulesCall.data[i],
+      abi: contracts.module.abi,
+      functionName: 'getTokens',
+    }
+
+    moduleContracts.push(moduleIndividual_name, moduleIndividual_image, moduleIndividual_tokens)
+  }
+
+  const wrappersData: any = useContractReads({
+    contracts: moduleContracts,
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
+
+  for (let i = 0; i < wrappersData.data?.length; i += chunkSize) {
+    const chunk: any = wrappersData.data.slice(i, i + chunkSize);
+
+    if (chunk[0] == null) {
+      continue
+    }
+
+    modules.push({
+      name: chunk[0],
+      image: chunk[1],
+      tokens: chunk[2],
+      symbol: 'ETH',
+      apy: '7.69',
+      apyPerformance: '+4.79',
+      blockchain: chain?.name,
+      address: allModulesCall.data[i / 3]
+    })
+  }
 
   if (modules.length > 6) {
     columnAmount = 6
@@ -83,6 +111,16 @@ export function Modules() {
       ],
     },
   ]
+
+  useEffect(() => {
+    // This forces a rerender, so the date is rendered
+    // the second time but not the first
+    setHydrated(true);
+  }, []);
+  if (!hydrated) {
+    // Returns null on first render, so the client and server match
+    return null;
+  }
 
   return (
     <>
@@ -149,14 +187,14 @@ export function Modules() {
 
           <div className="max-h-min pb-8">
             {allModulesCall.data != undefined && allModulesCall.data.length > 0 ?
-              <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
-                {modules.map((module, moduleId) => (
+              <div className={"grid gap-6 sm:grid-cols-" + { columnAmount } + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
+                {modules.map((module: any, moduleId: number) => (
                   <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
                     <div className="flex w-full items-center justify-between space-x-6 p-6">
-                      <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.symbol} />
+                      <Image className="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300" width={600} height={600} src={module.image} alt={module.name} />
                       <div className="flex-1 truncate">
                         <div className="flex items-center space-x-3">
-                          <h3 className="truncate text-sm font-medium text-gray-900">{module.slug}</h3>
+                          <h3 className="truncate text-sm font-medium text-gray-900">{module.name}</h3>
                           <span className="inline-block flex-shrink-0 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
                             {module.apy}%
                           </span>
@@ -167,8 +205,7 @@ export function Modules() {
                     <div>
                       <div className="-mt-px flex divide-x divide-gray-200">
                         <div className="flex w-0 flex-1">
-                          <Link href={'/module/' + module.slug} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                            {/* <EnvelopeIcon className="h-5 w-5 text-gray-400" aria-hidden="true" /> */}
+                          <Link href={'/module/' + module.address} className="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
                             Explore
                           </Link>
                         </div>
