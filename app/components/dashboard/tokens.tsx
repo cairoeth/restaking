@@ -16,10 +16,6 @@ export function CreateWrapper(wrapperAddress: any) {
   const { address, isConnecting, isDisconnected } = useAccount()
   var data: any = {}
 
-  if (isDisconnected) {
-    return null
-  }
-
   const wrapperContract: any = {
     address: wrapperAddress.wrapperAddress,
     abi: contracts.wrapper.abi,

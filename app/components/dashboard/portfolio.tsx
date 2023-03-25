@@ -2,11 +2,9 @@ import { Assets } from "components/dashboard/assets"
 import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
-import { useContractRead, useContractReads, useBalance, useAccount, erc20ABI } from 'wagmi'
+import { useContractRead, useContractReads, useAccount, erc20ABI } from 'wagmi'
 import { tokens, contracts } from 'components/helpers/contracts'
-import { usePrice } from 'components/helpers/prices'
-import { BigNumber, ethers } from "ethers";
-import { StakedAssetsSimulator } from 'components/helpers/simulators'
+import { ethers } from "ethers";
 
 type Props = {
   data: any
@@ -186,8 +184,8 @@ export function Portfolio() {
   const stakedAssets: any = useStakedAssets(allWrappersCall.data, address)
 
   const totalWorth: any = (parseFloat(availableAssets.worth) + parseFloat(stakedAssets.worth)).toFixed(2)
-  const availablePercentrage: any = ((parseFloat(availableAssets.worth) / totalWorth) * 100).toFixed(2)
-  const stakedPercentage: any = ((parseFloat(stakedAssets.worth) / totalWorth) * 100).toFixed(2)
+  let availablePercentrage: any = ((parseFloat(availableAssets.worth) / totalWorth) * 100).toFixed(2)
+  let stakedPercentage: any = ((parseFloat(stakedAssets.worth) / totalWorth) * 100).toFixed(2)
 
   for (var i = 0; i < stakedAssets.assets.length; ++i) {
     // Calculate the token percentage of the total worth
@@ -216,6 +214,14 @@ export function Portfolio() {
   // Add unstaked color
   pieColors.push('rgba(189, 195, 199, 1)')
 
+  if (isNaN(availablePercentrage as number) || isNaN(stakedPercentage as number)) {
+    availablePercentrage = 0
+    stakedPercentage = 0
+
+    pieValues.push('100')
+    pieColors.push('rgba(189, 195, 199, 0.25)')
+  }
+
   const pieData = {
     datasets: [
       {
@@ -226,37 +232,50 @@ export function Portfolio() {
     ],
   };
 
-  const piePlugins = [{
-    id: 'textinside',
-    beforeDraw: function (chart: any) {
-      var width = chart.width,
-        height = chart.height,
-        ctx = chart.ctx;
-      ctx.restore();
+  const fontUrl = 'https://fonts.cdnfonts.com/s/15051/Segoe%20UI.woff'
+  const segoeUI = new FontFace('Segoe UI', `url(${fontUrl})`);
+  var piePlugins: any = []
 
-      var text1 = "Total assets"
-      var text2 = "$" + totalWorth
-      console.log(totalWorth)
-      console.log(text2)
-      var text3 = "APR " + ((parseFloat(availableAssets.APR) + parseFloat(stakedAssets.APR)) / 2).toString() + "%"
-      var textY = height / 1.75;
-      ctx.textAlign = 'left';
+  segoeUI.load().then((font: FontFace) => {
+    // This is required
+    document.fonts.add(font);
 
-      ///////////// TEXT 1 /////////////
-      ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
-      ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
+    const plugin = {
+      id: 'textinside',
+      beforeDraw: function (chart: any) {
+        var width = chart.width,
+          height = chart.height,
+          ctx = chart.ctx;
+        ctx.restore();
 
-      ///////////// TEXT 2 /////////////
-      ctx.font = "bold " + (height / 100).toFixed(2) + "rem Segoe UI";
-      ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
+        var text1 = "Total assets"
+        var text2 = "$" + totalWorth
+        var text3 = "APR " + ((parseFloat(availableAssets.APR) + parseFloat(stakedAssets.APR)) / 2).toString() + "%"
+        var textY = height / 1.75;
+        ctx.textAlign = 'left';
 
-      ///////////// TEXT 3 /////////////
-      ctx.font = (height / 300).toFixed(2) + "rem Segoe UI";
-      ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
+        ///////////// TEXT 1 /////////////
+        ctx.font = (height / 300).toFixed(2) + `rem '${font.family}'`;
+        ctx.fillText(text1, Math.round((width - ctx.measureText(text1).width) / 2), textY - (0.4 * textY));
 
-      ctx.save();
+        ///////////// TEXT 2 /////////////
+        ctx.font = "bold " + (height / 100).toFixed(2) + `rem '${font.family}'`;
+        ctx.fillText(text2, Math.round((width - ctx.measureText(text2).width) / 2), textY - 3);
+
+        ///////////// TEXT 3 /////////////
+        ctx.font = (height / 300).toFixed(2) + `rem '${font.family}'`;
+        ctx.fillText(text3, Math.round((width - ctx.measureText(text3).width) / 2), textY + (0.25 * textY));
+
+        ctx.save();
+      }
     }
-  }]
+
+    piePlugins.push(plugin)
+
+    // // Usage example
+    // ctx.font = `30px '${font.family}'`;
+    // ctx.fillText("Hello World!", 10, 50);
+  });
 
   return (
     <div className="card bg-base-100 shadow-xl mb-10 mt-6">
