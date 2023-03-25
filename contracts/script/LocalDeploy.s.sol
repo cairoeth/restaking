@@ -3,6 +3,7 @@ pragma solidity ^0.8.18;
 
 import "forge-std/Script.sol";
 import "@restaking/RestakingController.sol";
+import {BasicModule} from "@restaking/modules/examples/BasicModule.sol";
 import {MockToken} from "../test/utils/MockToken.sol";
 
 contract LocalDeploy is Script {
@@ -18,6 +19,8 @@ contract LocalDeploy is Script {
         controller = new RestakingController();
         underlyingToken = new MockToken();
         underlyingToken.mint(0xe7E60d2d6D7dF39810eE973Ae6187b01D4758344, 1000 ether);
+        
+        new BasicModule('Basic Module', 'https://i.imgur.com/lAwEdqL.png');
 
         vm.stopBroadcast();
     }
