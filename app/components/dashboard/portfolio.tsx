@@ -28,60 +28,71 @@ const pieOptions = {
 
 function useAvailableAssets(wrappers: any, address: any) {
   var availableAssets: any = []
+  var wrapperContracts: any = []
+  var underlyingContracts: any = []
+  const chunkSize = 3;
   var totalUSD = 0
   var APR = 7.7
 
-  if (wrappers == undefined) {
-    return { assets: [], worth: 0, APR: 0, yield: 0 }
-  }
-
   for (var i = 0; i < wrappers.length; ++i) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const wrapperCall: Props = useContractRead({
+    const wrapperIndividual: any = {
       address: wrappers[i],
       abi: contracts.wrapper.abi,
       functionName: 'wrapped',
-    })
+    }
 
-    const underlyingContract: any = {
-      address: wrapperCall.data,
+    wrapperContracts.push(wrapperIndividual)
+  }
+
+  const getAllUnderlying: any = useContractReads({
+    contracts: wrapperContracts,
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
+
+  for (var i = 0; i < getAllUnderlying.data?.length; ++i) {
+    const underlingIndividual_symbol: any = {
+      address: getAllUnderlying.data[i],
       abi: erc20ABI,
+      functionName: 'symbol',
     }
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const underlyingData: any = useContractReads({
-      contracts: [
-        {
-          ...underlyingContract,
-          functionName: 'symbol',
-        },
-        {
-          ...underlyingContract,
-          functionName: 'balanceOf',
-          args: [address],
-        },
-        {
-          ...underlyingContract,
-          functionName: 'decimals',
-        },
-      ],
-      onError(error) {
-        console.log('Error', error)
-      },
-    })
-
-    if (underlyingData.data == undefined) {
-      return { assets: [], worth: 0, APR: 0, yield: 0 }
+    const underlingIndividual_balanceOf: any = {
+      address: getAllUnderlying.data[i],
+      abi: erc20ABI,
+      functionName: 'balanceOf',
+      args: [address],
     }
 
-    const balance: any = ethers.utils.formatUnits(underlyingData.data[1], underlyingData.data[2])
+    const underlingIndividual_decimals: any = {
+      address: getAllUnderlying.data[i],
+      abi: erc20ABI,
+      functionName: 'decimals',
+    }
+
+    underlyingContracts.push(underlingIndividual_symbol, underlingIndividual_balanceOf, underlingIndividual_decimals)
+  }
+
+  const underlyingData: any = useContractReads({
+    contracts: underlyingContracts,
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
+
+  for (let i = 0; i < underlyingData.data?.length; i += chunkSize) {
+    const chunk = underlyingData.data.slice(i, i + chunkSize);
+
+    const balance: any = ethers.utils.formatUnits(chunk[1], chunk[2])
+
     if (balance > 0) {
       const amountUSD: any = balance * 1
 
       availableAssets.push({
-        symbol: underlyingData.data[0],
+        symbol: chunk[0],
         address: tokens[i].address,
-        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + underlyingData.data[0],
+        image: "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + chunk[0],
         amount: balance,
         amountUSD: amountUSD.toFixed(2),
       })
@@ -115,7 +126,6 @@ function useStakedAssets(wrappers: any, address: any) {
       abi: contracts.wrapper.abi,
     }
 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const wrapperData: any = useContractReads({
       contracts: [
         {
@@ -271,10 +281,6 @@ export function Portfolio() {
     }
 
     piePlugins.push(plugin)
-
-    // // Usage example
-    // ctx.font = `30px '${font.family}'`;
-    // ctx.fillText("Hello World!", 10, 50);
   });
 
   return (
