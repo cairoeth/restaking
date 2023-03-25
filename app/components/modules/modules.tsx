@@ -19,11 +19,10 @@ export function Modules() {
   var columnAmount: number = 0
   const chunkSize = 3
   const [hydrated, setHydrated] = useState(false);
-
   const { chain, chains } = useNetwork()
 
   const allModulesCall: Props = useContractRead({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'allModules',
   })

@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { PlusCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
+import { PlusCircleIcon } from '@heroicons/react/24/outline'
 import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useNetwork
 } from 'wagmi'
 import useDebounce from 'components/helpers/useDebounce'
 import { contracts } from 'components/helpers/contracts'
@@ -11,6 +12,7 @@ import { Popover } from '@headlessui/react'
 
 export function AddModuleModal() {
   const [address, setAddress] = React.useState('')
+  const { chain, chains } = useNetwork()
   const debouncedAddress = useDebounce(address)
 
   const {
@@ -18,7 +20,7 @@ export function AddModuleModal() {
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'addModule',
     args: [debouncedAddress],

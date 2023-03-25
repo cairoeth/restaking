@@ -2,7 +2,7 @@ import { Assets } from "components/dashboard/assets"
 import { Chart as ChartJS, ArcElement } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline"
-import { useContractRead, useContractReads, useAccount, erc20ABI } from 'wagmi'
+import { useContractRead, useContractReads, useAccount, erc20ABI, useNetwork } from 'wagmi'
 import { contracts, stringToColour, hexToRgbA } from 'components/helpers/contracts'
 import { ethers } from "ethers";
 
@@ -192,9 +192,10 @@ export function Portfolio() {
   var pieColors = []
 
   const { address, isConnecting, isDisconnected } = useAccount()
+  const { chain, chains } = useNetwork()
 
   const allWrappersCall: Props = useContractRead({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'allWrappers',
   })

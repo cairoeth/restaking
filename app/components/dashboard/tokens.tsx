@@ -1,9 +1,9 @@
-import { PuzzlePieceIcon, PlusIcon, MinusIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
+import { PuzzlePieceIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
 import { ColumnWrappers } from "components/dashboard/column"
 import Link from 'next/link'
 import { CreateWrapperModal } from 'components/dashboard/modals/createWrapper'
-import { useContractRead, useContractReads, useAccount } from 'wagmi'
+import { useContractRead, useContractReads, useAccount, useNetwork } from 'wagmi'
 import { contracts } from 'components/helpers/contracts'
 
 type Props = {
@@ -93,8 +93,10 @@ export function CreateWrapper(wrapperAddress: any) {
 }
 
 export function AllTokens() {
+  const { chain, chains } = useNetwork()
+
   const allWrappersCall: Props = useContractRead({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'allWrappers',
   })

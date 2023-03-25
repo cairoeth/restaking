@@ -4,12 +4,14 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useNetwork
 } from 'wagmi'
 import useDebounce from 'components/helpers/useDebounce'
 import { contracts } from 'components/helpers/contracts'
 
 export function CreateWrapperModal() {
   const [address, setAddress] = React.useState('')
+  const { chain, chains } = useNetwork()
   const debouncedAddress = useDebounce(address)
 
   const {
@@ -17,7 +19,7 @@ export function CreateWrapperModal() {
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'createWrapper',
     args: [debouncedAddress],

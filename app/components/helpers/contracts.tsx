@@ -1,5 +1,3 @@
-import { erc20ABI } from 'wagmi'
-
 export function stringToColour(text: string) {
   var hash = 0;
   for (var i = 0; i < text.length; i++) {
@@ -28,7 +26,14 @@ export function hexToRgbA(hex: string) {
 
 export const contracts = {
   controller: {
-    address: '0x25A1DF485cFBb93117f12fc673D87D1cddEb845a',
+    address: {
+      Restaking: '0x25A1DF485cFBb93117f12fc673D87D1cddEb845a',
+      Goerli: '',
+      Optimism: '',
+      Gnosis: '',
+      'Scroll Testnet': '',
+      'Polygon zkEVM Testnet': ''
+    },
     abi: [
       {
         name: 'createWrapper',
