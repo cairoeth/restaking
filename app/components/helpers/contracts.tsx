@@ -123,7 +123,14 @@ export const contracts = {
         outputs: [{ internalType: "bool", name: "", type: "bool" }],
         stateMutability: "nonpayable",
         type: "function"
-      }
+      },
+      {
+        inputs: [{ internalType: "address", name: "module", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }],
+        name: "unrestakeAndWithdraw",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function"
+      },
     ]
   },
   module: {

@@ -67,6 +67,13 @@ contract rsToken is ERC20 {
         return true;
     }
 
+    function unrestakeAndWithdraw(address module, uint256 amount) public returns (bool) {
+        restake(msg.sender, module, 0);
+        withdraw(msg.sender, msg.sender, amount);
+
+        return true;
+    }
+
     function restake(address from, address recipient, uint256 amount) public returns (bool) {
         restakedAmount[from][recipient] = amount;
 
@@ -110,7 +117,7 @@ contract rsToken is ERC20 {
         if (balanceOf[from] < amount) revert Insufficient();
 
         _burn(from, amount);
-        ERC20(wrapped).safeTransferFrom(address(this), recipient, amount);
+        ERC20(wrapped).transfer(recipient, amount);
 
         //emit withdraw(msg.sender, amount);
 
