@@ -69,7 +69,7 @@ export const contracts = {
         inputs: [{ indexed: true, internalType: "address", name: "module", type: "address" }],
         name: "ModuleAdded",
         type: "event"
-      }
+      },
     ]
   },
   wrapper: {
@@ -131,6 +131,30 @@ export const contracts = {
         stateMutability: "nonpayable",
         type: "function"
       },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address"
+          },
+          {
+            internalType: "address",
+            nam: "",
+            type: "address"
+          }
+        ],
+        name: "restakedAmount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256"
+          }
+        ],
+        stateMutability: "view",
+        type: "function"
+      }
     ]
   },
   module: {
