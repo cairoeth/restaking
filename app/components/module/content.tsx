@@ -65,7 +65,9 @@ export function ModuleContent({ module }: { module: string }) {
         <Bar data={data} />
       </div>
       <div className="col-span-2">
-        <Activity module={module} />
+        <React.StrictMode>
+          <Activity module={module} />
+        </React.StrictMode>
       </div>
       <div className="col-span-1 h-full">
         <ActionModal _restakeActive={true} moduleAddress={module} data={data} />

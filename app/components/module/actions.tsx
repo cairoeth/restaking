@@ -116,7 +116,13 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
     args: [wrapperData[Number(wrapper)]?.address, ethers.constants.MaxUint256],
   })
 
-  const write_approve_tx = useContractWrite(approve_tx.config)
+  const write_approve_tx = useContractWrite({
+    ...approve_tx.config,
+    onSuccess(data) {
+      console.log('approve success')
+      write_restake_tx.write?.()
+    },
+  })
 
   const status_approve_tx = useWaitForTransaction({
     hash: write_approve_tx.data?.hash,
@@ -131,22 +137,15 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
     args: [debouncedModuleAddress, ethers.utils.parseUnits(debouncedAmount.toString() || '0', wrapperData[Number(wrapper)]?.decimals_underlying)],
   })
 
-  const write_restake_tx = useContractWrite(restake_tx.config)
+  const write_restake_tx = useContractWrite({
+    ...restake_tx.config, onSuccess(data) {
+      window.location.reload();
+    }
+  })
 
   const status_restake_tx = useWaitForTransaction({
     hash: write_approve_tx.data?.hash,
   })
-
-  if (status_approve_tx.isSuccess && !toggle) {
-    setToggle(true)
-    write_restake_tx.write?.()
-  }
-
-  if (status_approve_tx.isSuccess && status_restake_tx.isSuccess) {
-    window.location.reload();
-  }
-
-  console.log(wrapperData)
 
   return (
     <>
@@ -199,7 +198,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
               </div>
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-base-600">Restaked amount (after)</dt>
-                <dd className="text-sm font-medium text-base-900">{(parseInt(wrapperData[Number(wrapper)]?.balance_wrapper) || 0 + parseInt(amount) || 0)  + " " + wrapperData[Number(wrapper)]?.symbol_wrapped}</dd>
+                <dd className="text-sm font-medium text-base-900">{(parseInt(wrapperData[Number(wrapper)]?.balance_wrapper) || 0 + parseInt(amount) || 0) + " " + wrapperData[Number(wrapper)]?.symbol_wrapped}</dd>
               </div>
             </dl>
           </>
