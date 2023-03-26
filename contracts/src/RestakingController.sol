@@ -100,7 +100,7 @@ contract RestakingController {
     function withdraw(address token, uint256 amount) external {
         address wrapper = getWrapper(token);
 
-        rsToken(wrapper).withdraw(msg.sender, msg.sender amount);
+        rsToken(wrapper).withdraw(msg.sender, msg.sender, amount);
     }
 
     function restake(address token, address module, uint256 amount) external {
