@@ -89,22 +89,25 @@ contract RestakingController {
                             EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
+    // TODO: add 'too' arg
     function deposit(address token, uint256 amount) external {
         address wrapper = getWrapper(token);
 
-        rsToken(wrapper).deposit(msg.sender, msg.sender, amount);
+        rsToken(wrapper).deposit(amount);
     }
 
+    // TODO: add 'too' arg
     function withdraw(address token, uint256 amount) external {
         address wrapper = getWrapper(token);
 
-        rsToken(wrapper).withdraw(msg.sender, msg.sender, amount);
+        rsToken(wrapper).withdraw(amount);
     }
 
+    // TODO: add 'from' arg
     function restake(address token, address module, uint256 amount) external {
         address wrapper = getWrapper(token);
 
-        rsToken(wrapper).restake(msg.sender, module, amount);
+        rsToken(wrapper).restake(wrapper, amount);
     }
 
     function transferFrom(address token, address from, address to, uint256 amount) external {

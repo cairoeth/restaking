@@ -4,6 +4,10 @@ pragma solidity ^0.8.18;
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
+interface Module {
+    function updateCallback(address user, uint256 amount) external;
+}
+
 /// @title Restaking Token
 /// @author cairoeth
 /// @author 0xfuturistic
@@ -67,6 +71,10 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
+    // TODO: add 'from' arg
+    function restake(address module, uint256 amount) public returns (bool) {
+        restakedAmount[msg.sender][module] = amount;
+
     function depositAndRestake(
         address module,
         uint256 amount
@@ -87,27 +95,15 @@ contract rsToken is ERC20 {
         return true;
     }
 
-    function restake(
-        address from,
-        address recipient,
-        uint256 amount
-    ) public returns (bool) {
-        restakedAmount[from][recipient] = amount;
-        restakedModules.push(recipient);
-
         //emit Restake(msg.sender, module, amount);
-
+        Module(module).updateCallback(msg.sender, amount);
         return true;
     }
 
     // we override the default transferFrom function for restaking
     // note: for restaking tokens, the allowance is not considered. only the restaked amount
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public override returns (bool) {
-        uint256 allowed = restakedAmount[from][msg.sender]; // Saves gas for limited approvals.
+    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
+        require(restakedAmount[from][msg.sender] >= amount, "RestakingToken: insufficient restaked amount");
 
         // note: unlike allowance, the restaked amount doesn't decrease
         //if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
@@ -121,40 +117,39 @@ contract rsToken is ERC20 {
         }
 
         emit Transfer(from, to, amount);
+        Module(msg.sender).updateCallback(from, amount);
 
         return true;
     }
 
-    function deposit(
-        address from,
-        address recipient,
-        uint256 amount
-    ) public returns (bool) {
-        ERC20(wrapped).safeTransferFrom(from, address(this), amount);
+    // TODO: add 'too' arg
+    function deposit(uint256 amount) public returns (bool) {
+        ERC20(wrapped).safeTransferFrom(msg.sender, address(this), amount);
 
-        _mint(recipient, amount);
+        _mint(msg.sender, amount);
 
         //emit Deposit(msg.sender, amount);
-
         return true;
     }
 
-    function withdraw(
-        address from,
-        address recipient,
-        uint256 amount
-    ) public returns (bool) {
-        if (balanceOf[from] < amount) revert Insufficient();
+    // TODO: add 'too' arg
+    function withdraw(uint256 amount) public returns (bool) {
+        if (balanceOf[msg.sender] < amount) revert Insufficient();
 
-        _burn(from, amount);
-        ERC20(wrapped).transfer(recipient, amount);
+        _burn(msg.sender, amount);
+        ERC20(wrapped).safeTransferFrom(address(this), msg.sender, amount);
 
-        //emit withdraw(msg.sender, amount);
-
+        //emit Withdraw(msg.sender, amount);
         return true;
     }
 
-    // TODO: add lock function
+
+    function getLockableAmount(address user, address by) public view returns (uint256) {
+        if (restakedAmount[user][by] >= balanceOf[user]) {
+            return balanceOf[user];
+        } else {
+            return restakedAmount[user][by];
+
 
     /*//////////////////////////////////////////////////////////////
                              VIEW FUNCTIONS
