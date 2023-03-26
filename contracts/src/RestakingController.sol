@@ -30,14 +30,8 @@ contract RestakingController {
     /// @dev Store the modules.
     address[] public modules;
 
-    /// @dev Store the index of the modules.
-    mapping(address => uint256) public moduleIndex;
-
     /// @dev Store the wrapper addresses for ERC20 tokens.
     mapping(address => address) public tokenToWrapper;
-
-    /// @dev Store the addresses that added modules.
-    mapping(address => address) public admin;
 
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
@@ -45,7 +39,6 @@ contract RestakingController {
 
     event WrapperCreated(address indexed token, address indexed wrapper);
     event ModuleAdded(address indexed module);
-    event ModuleRemoved(address indexed module);
 
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
@@ -73,7 +66,8 @@ contract RestakingController {
                 string.concat(prefix, _token.name()),
                 string.concat(prefix, _token.symbol()),
                 _token.decimals(),
-                token
+                token,
+                address(this)
             )
         );
 
@@ -81,48 +75,49 @@ contract RestakingController {
         tokenToWrapper[token] = wrapper;
 
         emit WrapperCreated(token, wrapper);
+
+        return wrapper;
+    }
+
+    function getWrapper(address token) public returns (address wrapper) {
+        if (tokenToWrapper[token] == address(0)) {
+            return createWrapper(token);
+        } else {
+            return tokenToWrapper[token];
+        }
     }
 
     /*//////////////////////////////////////////////////////////////
                             EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Restake a given amount of tokens to a module.
-    /// @param token ERC20 token to restake.
-    /// @param amount Amount of tokens to restake.
-    /// @param module Module to restake to.
-    function restake(address token, uint256 amount, address module) external {
-        if (moduleIndex[module] == 0) revert ModuleUnexistant(module);
-        address wrapper;
+    // TODO: add 'too' arg
+    function deposit(address token, uint256 amount) external {
+        address wrapper = getWrapper(token);
 
-        if (tokenToWrapper[token] == address(0)) {
-            wrapper = createWrapper(token);
-        } else {
-            wrapper = tokenToWrapper[token];
-        }
-
-        rsToken(wrapper).deposit(msg.sender, amount);
-
-        // todo: check that module exists
-        // todo: check that token wrapper is created, if not, create it
-        // deposit tokens to the wrapper
-        // assign restaked tokens to the module
+        rsToken(wrapper).deposit(amount);
     }
 
-    /// @notice Unstake tokens from a module.
-    /// @param token ERC20 token to unstake.
-    /// @param amount Amount to unstake.
-    /// @param module Module to unstake from.
-    function unrestake(address token, uint256 amount, address module) external {
-        // todo: check that module exists
-        // todo: check that token wrapper is created
-        // todo: make sure that the user cannot unstake during liveness or disputations
-        // unstake tokens from the module and withdraw to receive the underlying
+    // TODO: add 'too' arg
+    function withdraw(address token, uint256 amount) external {
+        address wrapper = getWrapper(token);
+
+        rsToken(wrapper).withdraw(amount);
     }
 
-    /// @notice Add a module to the directory.
-    /// @dev Must follow the module interface.
-    /// @param module Module address.
+    // TODO: add 'from' arg
+    function restake(address token, address module, uint256 amount) external {
+        address wrapper = getWrapper(token);
+
+        rsToken(wrapper).restake(wrapper, amount);
+    }
+
+    function transferFrom(address token, address from, address to, uint256 amount) external {
+        address wrapper = getWrapper(token);
+
+        rsToken(wrapper).transferFrom(from, to, amount);
+    }
+
     function addModule(address module) external {
         if (!ModuleBase(module).supportsInterface(interfaceId)) {
             revert Unsupported(module);
@@ -131,24 +126,13 @@ contract RestakingController {
         // TODO: add sec checks for wrapped tokens given inside the module
 
         modules.push(module);
-        moduleIndex[module] = modules.length - 1;
-        admin[module] = msg.sender;
 
         emit ModuleAdded(module);
     }
 
-    /// @notice Remove a module from the directory.
-    /// @dev Must be the same address that added the module to the directory.
-    /// @param module Module address.
-    function removeModule(address module) external {
-        if (admin[module] != msg.sender) revert Unauthorized(admin[module]);
-
-        delete modules[moduleIndex[module]];
-        delete moduleIndex[module];
-        delete admin[module];
-
-        emit ModuleRemoved(module);
-    }
+    /*//////////////////////////////////////////////////////////////
+                             VIEW FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
 
     /// @notice Returns all the created wrappers.
     function allWrappers() public view returns (address[] memory) {

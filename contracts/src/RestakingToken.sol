@@ -60,6 +60,7 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
+    // TODO: add 'from' arg
     function restake(address module, uint256 amount) public returns (bool) {
         restakedAmount[msg.sender][module] = amount;
 
@@ -89,6 +90,7 @@ contract rsToken is ERC20 {
         return true;
     }
 
+    // TODO: add 'too' arg
     function deposit(uint256 amount) public returns (bool) {
         ERC20(wrapped).safeTransferFrom(msg.sender, address(this), amount);
 
@@ -99,6 +101,7 @@ contract rsToken is ERC20 {
         return true;
     }
 
+    // TODO: add 'too' arg
     function withdraw(uint256 amount) public returns (bool) {
         if (balanceOf[msg.sender] < amount) revert Insufficient();
 
@@ -109,4 +112,6 @@ contract rsToken is ERC20 {
 
         return true;
     }
+
+    // TODO: add lock function
 }
