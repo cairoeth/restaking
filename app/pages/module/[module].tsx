@@ -6,26 +6,11 @@ import { Page } from 'components/ui/page'
 import { Navbar } from 'components/ui/navbar'
 import { Footer } from 'components/ui/footer'
 
-import { Bar } from "components/module/bar";
-import { Activity } from 'components/module/activity'
-import { SubscribeDelegateModal } from 'components/module/actions'
-
-// This is eventually replaced by data called from the contracts.
-var data = {
-  slug: 'Optimism',
-  symbol: 'OP',
-  blockchain: 'Ethereum Mainnet',
-  image: 'https://gateway.optimism.io/static/media/optimism.caeb9392.svg',
-  apr: '10.14',
-  tvl: '8.33M',
-  rewards7: '8.144',
-  rewards14: '16.288',
-  rewards31: '32.576',
-  slashing: '0.44',
-  validators: '69',
-}
+import { ModuleContent } from 'components/module/content'
 
 export default function App() {
+  const router = useRouter()
+  const { module } = router.query
 
   useEffect(() => {
     document.title = "Dashboard - Restaking";
@@ -38,18 +23,7 @@ export default function App() {
       <Navbar />
       <div className="px-4 py-4 sm:px-6 lg:px-8 bg-base-300">
         <div className='w-full grid-cols-3 gap-4 overflow-y-hidden overflow-x-scroll px-10 pt-1 pb-10 xl:grid xl:overflow-x-auto xl:px-4'>
-          <div className='col-span-3'>
-            <Bar data={data} />
-          </div>
-          <div className="col-span-2">
-            <Activity />
-          </div>
-          <div className="col-span-1 h-full">
-            <SubscribeDelegateModal enrolled={false} _subscribeActive={true} module={data} />
-          </div>
-          {/* <div className="col-span-3">
-            <Validators />
-          </div> */}
+          <ModuleContent module={module as string} />
         </div>
       </div>
       <Footer />

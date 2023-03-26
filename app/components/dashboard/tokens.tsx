@@ -1,9 +1,9 @@
-import { PuzzlePieceIcon, PlusIcon, MinusIcon, ChevronDownIcon } from "@heroicons/react/24/outline"
+import { PuzzlePieceIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
 import { ColumnWrappers } from "components/dashboard/column"
 import Link from 'next/link'
 import { CreateWrapperModal } from 'components/dashboard/modals/createWrapper'
-import { useContractRead, useContractReads, useAccount } from 'wagmi'
+import { useContractRead, useContractReads, useAccount, useNetwork } from 'wagmi'
 import { contracts } from 'components/helpers/contracts'
 
 type Props = {
@@ -14,7 +14,6 @@ type Props = {
 
 export function CreateWrapper(wrapperAddress: any) {
   const { address, isConnecting, isDisconnected } = useAccount()
-  var data: any = {}
 
   const wrapperContract: any = {
     address: wrapperAddress.wrapperAddress,
@@ -50,41 +49,41 @@ export function CreateWrapper(wrapperAddress: any) {
     },
   })
 
-  if (wrapperData.isSuccess) {
-    data.name = wrapperData.data[0]
-    data.symbol = wrapperData.data[1]
-    data.image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + wrapperData.data[0]
-    data.address = wrapperAddress.wrapperAddress
-    data.underlying = wrapperData.data[2]
-    data.totalSupply = wrapperData.data[3]
-    data.yourBalance = wrapperData.data[4]
+  if (wrapperData.data != undefined && wrapperData.data[0] != null) {
+    const name = wrapperData.data[0]
+    const symbol = wrapperData.data[1]
+    const image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + name
+    const addressWrapper = wrapperAddress.wrapperAddress
+    const underlying = wrapperData.data[2]
+    const totalSupply = wrapperData.data[3]
+    const yourBalance = wrapperData.data[4]
 
     return (
       <>
         <td className='text-left'>
-          <Link href={'https://goerli.etherscan.io/address/' + data.address}>
+          <Link href={'https://goerli.etherscan.io/address/' + addressWrapper}>
             <div className="flex items-center space-x-3">
               <div className="avatar">
                 <div className="mask mask-squircle w-12 h-12 rounded-full">
-                  <Image width={600} height={600} src={data.image} alt={"Image of wrapper " + data.name} />
+                  <Image width={600} height={600} src={image} alt={"Image of wrapper " + name} />
                 </div>
               </div>
               <div>
-                <div className="text-lg font-bold">{data.name}</div>
-                <div className="text-base text-left text-gray-500">{data.symbol}</div>
+                <div className="text-lg font-bold">{name}</div>
+                <div className="text-base text-left text-gray-500">{symbol}</div>
               </div>
             </div>
           </Link>
         </td>
-        <ColumnWrappers first="Address" second={(data.address.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + data.address} />
-        <ColumnWrappers first="Underlying" second={(data.underlying.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + data.underlying} />
-        <ColumnWrappers first="Total Supply" second={data.totalSupply + ' ' + data.symbol} third={''} link={'#'} />
-        <ColumnWrappers first="Your balance" second={data.yourBalance + ' ' + data.symbol} third={''} link={'#'} />
+        <ColumnWrappers first="Address" second={(addressWrapper.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + addressWrapper} />
+        <ColumnWrappers first="Underlying" second={(underlying.substring(0, 18)) + '...'} third={''} link={'https://goerli.etherscan.io/address/' + underlying} />
+        <ColumnWrappers first="Total Supply" second={totalSupply + ' ' + symbol} third={''} link={'#'} />
+        <ColumnWrappers first="Your balance" second={yourBalance + ' ' + symbol} third={''} link={'#'} />
         <td>
           <div className="flex-none">
-            <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
-              Explore modules
-            </button>
+            <Link className="btn btn-sm btn-secondary btn-outline ml-4 align-middle" href='/modules'>
+              Filter modules
+            </Link>
           </div>
         </td>
       </>
@@ -94,8 +93,10 @@ export function CreateWrapper(wrapperAddress: any) {
 }
 
 export function AllTokens() {
+  const { chain, chains } = useNetwork()
+
   const allWrappersCall: Props = useContractRead({
-    address: contracts.controller.address as `0x${string}`,
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
     abi: contracts.controller.abi,
     functionName: 'allWrappers',
   })
@@ -126,7 +127,7 @@ export function AllTokens() {
           </div>
 
           <div className="overflow-x-auto max-h-min">
-            {allWrappersCall.data.length > 0 ?
+            {allWrappersCall.data != undefined && allWrappersCall.data.length > 0 ?
               <table className="table w-full text-center">
                 <tbody>
                   {allWrappersCall.data.map((wrapperAddress: any, index: number) => (
@@ -136,7 +137,15 @@ export function AllTokens() {
                   ))}
                 </tbody>
               </table>
-              : 'No wrappers created'}
+              :
+              <div className="flex w-full items-center justify-between space-x-6 p-6">
+                <div className="flex-1 truncate">
+                  <div className="flex space-x-3 place-content-center">
+                    <div className="text-lg">No wrappers created yet. Be the first one to create!&nbsp;&nbsp;👀</div>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
         </div>
       </div>

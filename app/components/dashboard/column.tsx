@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-type PropsEnrolled = {
+type PropsRestaked = {
   first: string;
   second: string;
   third: string;
@@ -14,7 +14,7 @@ type PropsWrappers = {
   link: string;
 };
 
-export function ColumnEnrolled({first, second, third, slug}: PropsEnrolled): JSX.Element {
+export function ColumnRestaked({first, second, third, slug}: PropsRestaked): JSX.Element {
   return (
     <td>
       <Link href={'/module/' + slug}>

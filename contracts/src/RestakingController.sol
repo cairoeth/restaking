@@ -5,7 +5,7 @@ import {FixedPointMathLib} from "@solmate/utils/FixedPointMathLib.sol";
 import {ERC20} from "@solmate/tokens/ERC20.sol";
 import {ERC165Checker} from "@openzeppelin/utils/introspection/ERC165Checker.sol";
 import {rsToken} from "@restaking/RestakingToken.sol";
-import {IModule} from "@restaking/modules/IModule.sol";
+import {ModuleBase} from "@restaking/modules/ModuleBase.sol";
 
 /// @title Restaking Controller
 /// @author cairoeth
@@ -22,7 +22,7 @@ contract RestakingController {
     string public constant prefix = "rs";
 
     /// @dev Constant interface identifier to check with ERC-165.
-    bytes4 public constant interfaceId = 0x20965255;
+    bytes4 private constant interfaceId = type(ModuleBase).interfaceId;
 
     /// @dev Store of all tokens created by this controller.
     address[] public wrappers;
@@ -63,8 +63,7 @@ contract RestakingController {
     /// @notice Create a pool with the given parameters.
     /// @param token Address of ERC20 token to wrap around.
     function createWrapper(address token) public returns (address wrapper) {
-        if (tokenToWrapper[token] != address(0))
-            revert WrapperExisting(token);
+        if (tokenToWrapper[token] != address(0)) revert WrapperExisting(token);
 
         ERC20 _token = ERC20(token);
 
@@ -129,7 +128,7 @@ contract RestakingController {
     /// @param token ERC20 token to unstake.
     /// @param amount Amount to unstake.
     /// @param module Module to unstake from.
-    function unstake(address token, uint256 amount, address module) external {
+    function unrestake(address token, uint256 amount, address module) external {
         // todo: check that module exists
         // todo: check that token wrapper is created
         // todo: make sure that the user cannot unstake during liveness or disputations
@@ -140,8 +139,10 @@ contract RestakingController {
     /// @dev Must follow the module interface.
     /// @param module Module address.
     function addModule(address module) external {
-        if (!IModule(module).supportsInterface(interfaceId))
+        if (!ModuleBase(module).supportsInterface(interfaceId))
             revert Unsupported(module);
+
+        // TODO: add sec checks for wrapped tokens given inside the module
 
         modules.push(module);
         moduleIndex[module] = modules.length - 1;
@@ -172,5 +173,16 @@ contract RestakingController {
         }
 
         return w;
+    }
+
+    /// @notice Returns all the added modules.
+    function allModules() public view returns (address[] memory) {
+        address[] memory m = new address[](modules.length);
+
+        for (uint256 i = 0; i < modules.length; i++) {
+            m[i] = modules[i];
+        }
+
+        return m;
     }
 }

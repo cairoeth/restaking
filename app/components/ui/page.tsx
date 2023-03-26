@@ -1,5 +1,5 @@
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { goerli, localhost, foundry } from "wagmi/chains";
+import { goerli, gnosis, optimism, scrollTestnet, polygonZkEvmTestnet } from "wagmi/chains";
 import { ConnectKitProvider } from "connectkit";
 import { infuraProvider } from 'wagmi/providers/infura'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
@@ -8,8 +8,8 @@ import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { Chain } from 'wagmi'
 
-export const testing = {
-  id: 6900,
+export const restaking = {
+  id: 690691,
   name: 'Restaking',
   network: 'Restaking',
   nativeCurrency: {
@@ -24,7 +24,7 @@ export const testing = {
 } as const satisfies Chain
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [goerli, testing],
+  [goerli, restaking, gnosis, optimism, scrollTestnet, polygonZkEvmTestnet],
   [
     infuraProvider({ apiKey: process.env.INFURA as string, stallTimeout: 1_000 }),
     jsonRpcProvider({
@@ -35,25 +35,12 @@ const { chains, provider, webSocketProvider } = configureChains(
   ],
 );
 
-type WalletConnectOptionsProps =
-  | {
-    version: '2';
-    projectId: string;
-  }
-  | {
-    version: '1';
-  }
-  | undefined;
-
-const wcOpts: WalletConnectOptionsProps = { version: '1' };
-
 const client = createClient({
   connectors: [
     new MetaMaskConnector({
       chains,
       options: {
         shimDisconnect: true,
-        shimChainChangedDisconnect: true,
         UNSTABLE_shimOnConnectSelectAccount: true,
       },
     }),
@@ -67,8 +54,8 @@ const client = createClient({
     new WalletConnectConnector({
       chains,
       options: {
-        qrcode: false,
-        ...wcOpts,
+        projectId: '5245c2597c09eaa73a4e6fa3209e623e',
+        showQrModal: true,
       },
     }),
   ],
@@ -85,7 +72,9 @@ export function Page({ children }: Props): JSX.Element {
   return (
     <WagmiConfig client={client}>
       <ConnectKitProvider>
-        {children}
+        <div className="min-h-screen">
+          {children}
+        </div>
       </ConnectKitProvider>
     </WagmiConfig>
   );
