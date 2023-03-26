@@ -6,11 +6,13 @@ interface ModuleBase {
 
     function image() external view returns (string calldata); // image of the module
 
-    function getTokens() external view returns (address[] memory); // tokens that the module supports
-
-    function getMinStakes() external view returns (uint256[] memory); // min amount that can be staked in the module for each supported token
+    function getWrappers() external view returns (address[] memory); // wrappers that the module supports
 
     function getMaxSlashPcts() external view returns (uint256[] memory); // max percentage that can be slashed by the module (1e18 = 100%) for each token
 
+    function getLockAmount(address wrapper) external view returns (uint256); // get the amount of wrapped tokens to be locked when restaked
+
     function supportsInterface(bytes4 interfaceId) external pure returns (bool); // ERC-165 interface check
+
+    function supportsWrapper(address wrapper) external view returns (bool); // check if the module supports a wrapper
 }

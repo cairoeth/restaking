@@ -10,7 +10,7 @@ contract BasicModule is ModuleBase {
     string public name;
     string public image;
 
-    address[] public tokens;
+    address[] public wrappers;
     uint256[] public minStakes;
     uint256[] public maxSlashPcts;
 
@@ -21,24 +21,18 @@ contract BasicModule is ModuleBase {
         image = _image;
     }
 
-    function getTokens() external view returns (address[] memory) {
-        address[] memory t = new address[](tokens.length);
+    function getWrappers() external view returns (address[] memory) {
+        address[] memory w = new address[](wrappers.length);
 
-        for (uint256 i = 0; i < tokens.length; i++) {
-            t[i] = tokens[i];
+        for (uint256 i = 0; i < wrappers.length; i++) {
+            w[i] = wrappers[i];
         }
 
-        return t;
+        return w;
     }
 
-    function getMinStakes() external view returns (uint256[] memory) {
-        uint256[] memory s = new uint256[](minStakes.length);
-
-        for (uint256 i = 0; i < minStakes.length; i++) {
-            s[i] = minStakes[i];
-        }
-
-        return s;
+    function getLockAmount(address wrapper) external view returns (uint256) {
+        return 1 ether;
     }
 
     function getMaxSlashPcts() external view returns (uint256[] memory) {
@@ -55,5 +49,9 @@ contract BasicModule is ModuleBase {
         bytes4 interfaceId
     ) external pure returns (bool) {
         return interfaceId == INTERFACE_ID_INVALID;
+    }
+
+    function supportsWrapper(address wrapper) external pure returns (bool) {
+        return true;
     }
 }
