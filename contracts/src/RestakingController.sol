@@ -109,21 +109,6 @@ contract RestakingController {
         // assign restaked tokens to the module
     }
 
-    /// @notice Restake multiple tokens to a module.
-    /// @param tokens ERC20 tokens to restake.
-    /// @param amounts Amounts of tokens to restake.
-    /// @param module Module to restake to.
-    function restakeMultiple(
-        address[] calldata tokens,
-        uint256[] calldata amounts,
-        address module
-    ) external {
-        // todo: check that module exists
-        // todo: check that token wrapper is created
-        // deposit tokens to the wrapper
-        // assign restaked tokens to the module
-    }
-
     /// @notice Unstake tokens from a module.
     /// @param token ERC20 token to unstake.
     /// @param amount Amount to unstake.
@@ -139,8 +124,9 @@ contract RestakingController {
     /// @dev Must follow the module interface.
     /// @param module Module address.
     function addModule(address module) external {
-        if (!ModuleBase(module).supportsInterface(interfaceId))
+        if (!ModuleBase(module).supportsInterface(interfaceId)) {
             revert Unsupported(module);
+        }
 
         // TODO: add sec checks for wrapped tokens given inside the module
 
