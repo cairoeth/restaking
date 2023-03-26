@@ -80,6 +80,7 @@ export function Modules() {
     } else {
       setColumnAmount(modules.length);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filters = [

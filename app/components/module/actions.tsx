@@ -139,55 +139,7 @@ function Restake({ moduleAddress }: PropsRestake): JSX.Element {
 function Unrestake({ moduleAddress }: PropsUnrestake): JSX.Element {
   const [amount, setAmount] = React.useState(0);
 
-  return (
-    <form
-    // onSubmit={(e) => {
-    //   write?.()
-    // }}
-    >
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text">{module.symbol} Amount</span>
-        </label>
-        <label className="input-group">
-          <input
-            id="amount"
-            type="number"
-            // onChange={(e) => setAmount(e.target.value)}
-            placeholder="0"
-            className="input input-bordered w-full"
-            value={amount}
-          />
-          <span>USD</span>
-        </label>
-      </div>
-      <div className="divider text-base-content/60 m-4">Overview</div>
-      <dl className="mb-4 space-y-2">
-        <div className="flex items-center justify-between">
-          <dt className="text-sm text-base-600">Supplied</dt>
-          <dd className="text-sm font-medium text-base-900">{supplied} USD</dd>
-        </div>
-        <div className="flex items-center justify-between border-t border-base-200 pt-2">
-          <dt className="flex items-center text-sm text-base-600">
-            <span>Variable APY</span>
-          </dt>
-          <dd className="text-sm font-medium text-base-900">{supplyAPY}%</dd>
-        </div>
-        <div className="flex items-center justify-between border-t border-base-200 pt-2">
-          <dt className="flex text-sm text-base-600">
-            <span>Min. collateralization</span>
-          </dt>
-          <dd className="text-sm font-medium text-base-900">{minCollateraliation}%</dd>
-        </div>
-      </dl>
-      <button className="btn btn-block space-x-2 mt-4">
-        <div className="flex items-center">
-          <ArrowSmallDownIcon className="w-6 h-6 mr-2" />
-          Unrestake
-        </div>
-      </button>
-    </form>
-  )
+  return (<></>)
 }
 
 export function ActionModal({ _restakeActive, moduleAddress }: PropsModal): JSX.Element {
