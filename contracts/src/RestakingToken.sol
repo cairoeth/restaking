@@ -5,7 +5,7 @@ import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
 interface Module {
-    function restakeCallback(address user, uint256 amount) external;
+    function updateCallback(address user, uint256 amount) external;
 }
 
 /// @title Restaking Token
@@ -68,9 +68,8 @@ contract rsToken is ERC20 {
     function restake(address module, uint256 amount) public returns (bool) {
         restakedAmount[msg.sender][module] = amount;
 
-        Module(module).restakeCallback(msg.sender, amount);
         //emit Restake(msg.sender, module, amount);
-
+        Module(module).updateCallback(msg.sender, amount);
         return true;
     }
 
@@ -91,6 +90,7 @@ contract rsToken is ERC20 {
         }
 
         emit Transfer(from, to, amount);
+        Module(msg.sender).updateCallback(from, amount);
 
         return true;
     }
@@ -102,7 +102,6 @@ contract rsToken is ERC20 {
         _mint(msg.sender, amount);
 
         //emit Deposit(msg.sender, amount);
-
         return true;
     }
 
@@ -113,8 +112,7 @@ contract rsToken is ERC20 {
         _burn(msg.sender, amount);
         ERC20(wrapped).safeTransferFrom(address(this), msg.sender, amount);
 
-        //emit withdraw(msg.sender, amount);
-
+        //emit Withdraw(msg.sender, amount);
         return true;
     }
 

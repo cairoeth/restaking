@@ -14,6 +14,7 @@ contract OptimisticL2Module {
 
     address[] public candidateAddresses;
     uint256[] public candidateWeights;
+    uint256[] public candidateLocks;
     mapping(address => uint256) public candidateIndex;
 
     uint256 public minBond;
@@ -34,39 +35,55 @@ contract OptimisticL2Module {
     }
 
     function reward(address user) external {
+        require(msg.sender == L2OutputOracle, "Only the L2OutputOracle can slash");
+
         // TODO: reward the sequencer
     }
 
     function slash(address user) external {
-        uint256 bond = candidateWeights[candidateIndex[user]];
+        require(msg.sender == L2OutputOracle, "Only the L2OutputOracle can slash");
 
-        token.transferFrom(user, address(0), bond);
+        uint256 i = candidateIndex[user];
+
+        token.transferFrom(user, address(0), candidateLocks[i]);
     }
 
     function lock(address user) external {
-        uint256 bond = candidateWeights[candidateIndex[user]];
+        require(msg.sender == L2OutputOracle, "Only the L2OutputOracle can lock");
 
-        token.transferFrom(user, address(this), bond);
+        uint256 i = candidateIndex[user];
+
+        require(token.transferFrom(user, address(this), candidateWeights[i]));
+
+        candidateLocks[i] += candidateWeights[i];
     }
 
     function unlock(address user) external {
-        uint256 bond = candidateWeights[candidateIndex[user]];
+        require(msg.sender == L2OutputOracle, "Only the L2OutputOracle can unlock");
 
-        token.transferFrom(address(this), user, bond);
+        uint256 i = candidateIndex[user];
+
+        token.transferFrom(address(this), user, candidateLocks[i]);
     }
 
-    function restakeCallback(address user, uint256 amount) external {
+    function updateCallback(address user, uint256 amount) external {
         for (uint256 i = 0; i < candidateAddresses.length; i++) {
             if (candidateAddresses[i] == user) {
                 uint256 lockable = token.getLockableAmount(user, address(this));
-                require(lockable >= minBond, "Not enough lockable amount for this module");
 
                 candidateIndex[user] = i;
 
                 totalLockableAmount -= candidateWeights[i];
                 candidateWeights[i] = lockable;
                 totalLockableAmount += candidateWeights[i];
+
+                return;
             }
         }
+        candidateAddresses.push(user);
+        candidateWeights.push(token.getLockableAmount(user, address(this)));
+        candidateLocks.push(0);
     }
+
+    // todo: move getlockableamount here
 }
