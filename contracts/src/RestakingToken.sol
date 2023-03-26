@@ -4,6 +4,10 @@ pragma solidity ^0.8.18;
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
+interface Module {
+    function restakeCallback(address user, uint256 amount) external;
+}
+
 /// @title Restaking Token
 /// @author cairoeth
 /// @author 0xfuturistic
@@ -64,7 +68,7 @@ contract rsToken is ERC20 {
     function restake(address module, uint256 amount) public returns (bool) {
         restakedAmount[msg.sender][module] = amount;
 
-        // TODO: trigger callback in module
+        Module(module).restakeCallback(msg.sender, amount);
         //emit Restake(msg.sender, module, amount);
 
         return true;
@@ -114,5 +118,11 @@ contract rsToken is ERC20 {
         return true;
     }
 
-    // TODO: add getLockableAmount function
+    function getLockableAmount(address user, address by) public view returns (uint256) {
+        if (restakedAmount[user][by] >= balanceOf[user]) {
+            return balanceOf[user];
+        } else {
+            return restakedAmount[user][by];
+        }
+    }
 }
