@@ -21,6 +21,10 @@ contract BasicModule is ModuleBase {
         image = _image;
     }
 
+    function addWrapper(address wrapper) external {
+        wrappers.push(wrapper);
+    }
+
     function getWrappers() external view returns (address[] memory) {
         address[] memory w = new address[](wrappers.length);
 

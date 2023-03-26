@@ -137,7 +137,7 @@ export const contracts = {
       },
       {
         inputs: [],
-        name: "getTokens",
+        name: "getWrappers",
         outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
         stateMutability: "view",
         type: "function"
