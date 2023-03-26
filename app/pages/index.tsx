@@ -13,7 +13,7 @@ import Link from 'next/link'
 export default function App() {
   useEffect(() => {
     document.title = "Dashboard - Restaking";
-    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme", "winter");
     document.documentElement.className = 'bg-base-300';
   });
 
@@ -51,8 +51,8 @@ export default function App() {
               </div>
             </div>
             <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Restaking</h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600">Where Ethereum validators and users can maximize their yield and capital value by subscribing to slashing conditions of different modules.</p>
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Restaking.wtf</h1>
+              <p className="mt-6 text-lg leading-8 text-gray-600">Restaking.wtf allows for any ERC20 to be used to validate, simultaneously, any or all on-chain trust networks. Our mechanism is original, secure, and composable, and we use it to decentralize OP's sequencer and pioneer optimistic L3s on Polygon's zkEVM, Scroll, and Gnosis Chain.</p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <ConnectKitButton />
               </div>

@@ -14,7 +14,7 @@ export default function App() {
 
   useEffect(() => {
     document.title = "Dashboard - Restaking";
-    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme", "winter");
     document.documentElement.className = 'bg-base-300';
   });
 

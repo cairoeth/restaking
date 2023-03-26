@@ -45,7 +45,7 @@ export function ModuleContent({ module }: { module: string }) {
       address: module,
       APY: '10.14',
       tvl: '<100k',
-      restakers: '69',
+      restakers: '1',
       available: '8.144',
       total: '16.288',
       slashing: '0.44',

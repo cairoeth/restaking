@@ -44,9 +44,7 @@ contract RestakingController {
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
 
-    error ModuleUnexistant(address module);
     error WrapperExisting(address token);
-    error Unauthorized(address admin);
     error Unsupported(address module);
 
     /*//////////////////////////////////////////////////////////////
@@ -77,6 +75,8 @@ contract RestakingController {
         emit WrapperCreated(token, wrapper);
     }
 
+    /// @notice Return the corresponding wrapper of a token.
+    /// @param token Address of ERC20 token.
     function getWrapper(address token) public returns (address wrapper) {
         if (tokenToWrapper[token] == address(0)) {
             return createWrapper(token);
@@ -89,39 +89,50 @@ contract RestakingController {
                             EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
 
-    // TODO: add 'too' arg
+    /// @notice Fetch the corresponding wrapper of a token and deposit.
+    /// @param token The address of the token.
+    /// @param amount The amount of tokens to deposit.
     function deposit(address token, uint256 amount) external {
         address wrapper = getWrapper(token);
 
         rsToken(wrapper).deposit(amount);
     }
 
-    // TODO: add 'too' arg
+    /// @notice Fetch the corresponding wrapper of a token and withdraw.
+    /// @param token The address of the token.
+    /// @param amount The amount of tokens to withdraw.
     function withdraw(address token, uint256 amount) external {
         address wrapper = getWrapper(token);
 
         rsToken(wrapper).withdraw(amount);
     }
 
-    // TODO: add 'from' arg
+    /// @notice Fetch the corresponding wrapper of a token and restake to a module.
+    /// @param token The address of the token.
+    /// @param module The address of the module to restake to
+    /// @param amount The amount of tokens to restake.
     function restake(address token, address module, uint256 amount) external {
         address wrapper = getWrapper(token);
 
         rsToken(wrapper).restake(wrapper, amount);
     }
 
+    /// @notice TransferFrom modification to fit restaking of wrapper.
+    /// @param token The address of the token to transfer.
+    /// @param from The address to transfer from.
+    /// @param to The address to transfer to.
     function transferFrom(address token, address from, address to, uint256 amount) external {
         address wrapper = getWrapper(token);
 
         rsToken(wrapper).transferFrom(from, to, amount);
     }
 
+    /// @notice Add a module to the directory to show up in UI.
+    /// @param module The address of the module.
     function addModule(address module) external {
         if (!ModuleBase(module).supportsInterface(interfaceId)) {
             revert Unsupported(module);
         }
-
-        // TODO: add sec checks for wrapped tokens given inside the module
 
         modules.push(module);
 

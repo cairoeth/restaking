@@ -58,4 +58,11 @@ contract BasicModule is ModuleBase {
     function supportsWrapper(address wrapper) external pure returns (bool) {
         return true;
     }
+
+    /// @notice Callback to update wrapper's lockable and available amounts.
+    /// @param user The address of the user to update values for.
+    /// @param amount The amount of tokens to update.
+    function updateCallback(address user, uint256 amount) external {
+        return;
+    }
 }

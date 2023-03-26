@@ -15,7 +15,7 @@ contract rsToken is ERC20 {
     using SafeTransferLib for ERC20;
 
     /*//////////////////////////////////////////////////////////////
-                                Variables
+                                VARIABLES
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Underlying wrapped token address.
@@ -24,11 +24,15 @@ contract rsToken is ERC20 {
     /// @notice Controller address.
     address public immutable controller;
 
-    /// @dev Store the restaked modules.
-    address[] public restakedModules;
-
     /// @notice The amount of tokens restaked into a module by an address
     mapping(address => mapping(address => uint256)) public restakedAmount;
+
+    /*//////////////////////////////////////////////////////////////
+                                 EVENTS
+    //////////////////////////////////////////////////////////////*/
+
+    event Deposit(address indexed sender, uint256 amount);
+    event Withdraw(address indexed sender, uint256 amount);
 
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
@@ -36,15 +40,6 @@ contract rsToken is ERC20 {
 
     error Unauthorized();
     error Insufficient();
-
-    /*//////////////////////////////////////////////////////////////
-                                Modifiers
-    //////////////////////////////////////////////////////////////*/
-
-    modifier onlyController() {
-        if (msg.sender != controller) revert Unauthorized();
-        _;
-    }
 
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
@@ -71,37 +66,37 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    // TODO: add 'from' arg
-    function restake(address module, uint256 amount) public returns (bool) {
-        restakedAmount[msg.sender][module] = amount;
-
+    /// @notice Helper function to restake and deposit in a single transaction
+    /// @param module The address of the module.
+    /// @param amount The amount of tokens to restake.
     function depositAndRestake(
         address module,
         uint256 amount
     ) public returns (bool) {
-        deposit(msg.sender, msg.sender, amount);
-        restake(msg.sender, module, amount);
+        deposit(amount);
+        restake(module, amount);
 
         return true;
     }
 
+    /// @notice Helper function to unrestake and withdraw in a single transaction
+    /// @param module The address of the module.
+    /// @param amount The amount of tokens to unrestake.
     function unrestakeAndWithdraw(
         address module,
         uint256 amount
     ) public returns (bool) {
-        restake(msg.sender, module, 0);
-        withdraw(msg.sender, msg.sender, amount);
+        restake(module, 0);
+        withdraw(amount);
 
         return true;
     }
 
-        //emit Restake(msg.sender, module, amount);
-        Module(module).updateCallback(msg.sender, amount);
-        return true;
-    }
-
-    // we override the default transferFrom function for restaking
-    // note: for restaking tokens, the allowance is not considered. only the restaked amount
+    /// @notice We override the default transferFrom function for restaking
+    ///         for restaking tokens, the allowance is not considered. only the restaked amount
+    /// @param from The address to transfer from.
+    /// @param to The address to transfer to.
+    /// @param amount The amount of tokens to transfer.
     function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
         require(restakedAmount[from][msg.sender] >= amount, "RestakingToken: insufficient restaked amount");
 
@@ -122,47 +117,43 @@ contract rsToken is ERC20 {
         return true;
     }
 
-    // TODO: add 'too' arg
-    function deposit(uint256 amount) public returns (bool) {
+    /// @notice Restakes tokens into a module.
+    /// @param module The address of the module.
+    /// @param amount The amount of tokens to restake.
+    function restake(address module, uint256 amount) public {
+        restakedAmount[msg.sender][module] = amount;
+        // Module(module).updateCallback(msg.sender, amount);
+    }
+
+    /// @notice Wrap token with wrapper.
+    /// @param amount The amount of tokens to wrap.
+    function deposit(uint256 amount) public {
         ERC20(wrapped).safeTransferFrom(msg.sender, address(this), amount);
 
         _mint(msg.sender, amount);
 
-        //emit Deposit(msg.sender, amount);
-        return true;
+        emit Deposit(msg.sender, amount);
     }
 
-    // TODO: add 'too' arg
-    function withdraw(uint256 amount) public returns (bool) {
+    /// @notice Unwrap token with wrapper.
+    /// @param amount The amount of tokens to unwrap.
+    function withdraw(uint256 amount) public {
         if (balanceOf[msg.sender] < amount) revert Insufficient();
 
         _burn(msg.sender, amount);
         ERC20(wrapped).safeTransferFrom(address(this), msg.sender, amount);
 
-        //emit Withdraw(msg.sender, amount);
-        return true;
+        emit Withdraw(msg.sender, amount);
     }
 
-
-    function getLockableAmount(address user, address by) public view returns (uint256) {
-        if (restakedAmount[user][by] >= balanceOf[user]) {
+    /// @notice Returns the lockable amount of tokens.
+    /// @param user The address of the restaker.
+    /// @param module The address of the module.
+    function getLockableAmount(address user, address module) public view returns (uint256) {
+        if (restakedAmount[user][module] >= balanceOf[user]) {
             return balanceOf[user];
         } else {
-            return restakedAmount[user][by];
-
-
-    /*//////////////////////////////////////////////////////////////
-                             VIEW FUNCTIONS
-    //////////////////////////////////////////////////////////////*/
-
-    /// @notice Returns all the created wrappers.
-    function getRestakedModules(address user) public view returns (address[] memory m, uint256[] memory a) {
-        m = new address[](restakedModules.length);
-        a = new uint256[](restakedModules.length);
-
-        for (uint256 i = 0; i < restakedModules.length; i++) {
-            m[i] = restakedModules[i];
-            a[i] = restakedAmount[user][restakedModules[i]];
+            return restakedAmount[user][module];
         }
     }
 }

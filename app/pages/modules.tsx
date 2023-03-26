@@ -9,7 +9,7 @@ import { Performance } from "components/modules/performance"
 export default function App() {
   useEffect(() => {
     document.title = "Dashboard - Modules";
-    document.documentElement.setAttribute("data-theme", "light");
+    document.documentElement.setAttribute("data-theme", "winter");
     document.documentElement.className = 'bg-base-300';
   });
 
