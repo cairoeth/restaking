@@ -66,7 +66,9 @@ contract TestRestakingController is Test {
         vm.expectRevert();
         controller.createWrapper(address(underlyingToken));
 
-        assertTrue(controller.tokenToWrapper(address(underlyingToken)) == wrapper);
+        assertTrue(
+            controller.tokenToWrapper(address(underlyingToken)) == wrapper
+        );
     }
 
     /// @dev Check that module can be added to the controller if it follows the interface.
@@ -80,5 +82,7 @@ contract TestRestakingController is Test {
         controller.addModule(address(0));
 
         assertTrue(controller.modules(0) == module);
+        assertTrue(controller.moduleIndex(module) == 0);
+        assertTrue(controller.admin(module) == USER);
     }
 }
