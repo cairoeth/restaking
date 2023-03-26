@@ -25,7 +25,7 @@ export function ModuleContent({ module }: { module: string }) {
       },
       {
         ...moduleContract,
-        functionName: 'getTokens',
+        functionName: 'getWrappers',
       },
       {
         ...moduleContract,
@@ -39,11 +39,12 @@ export function ModuleContent({ module }: { module: string }) {
 
   if (moduleData.data != undefined && moduleData.data[0] != null) {
     data = {
+      wrappers: moduleData.data[1],
       image: moduleData.data[2],
       name: moduleData.data[0],
       address: module,
       APY: '10.14',
-      tvl: '8.33M',
+      tvl: '<100k',
       restakers: '69',
       available: '8.144',
       total: '16.288',
@@ -64,10 +65,12 @@ export function ModuleContent({ module }: { module: string }) {
         <Bar data={data} />
       </div>
       <div className="col-span-2">
-        <Activity module={module} />
+        <React.StrictMode>
+          <Activity module={module} />
+        </React.StrictMode>
       </div>
       <div className="col-span-1 h-full">
-        <ActionModal _restakeActive={true} moduleAddress={module} />
+        <ActionModal _restakeActive={true} moduleAddress={module} data={data} />
       </div>
     </>
   );

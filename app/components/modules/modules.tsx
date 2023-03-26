@@ -16,7 +16,7 @@ type Props = {
 export function Modules() {
   var moduleContracts: any = []
   var modules: any = []
-  const chunkSize = 3
+  const chunkSize = 2
   const [hydrated, setHydrated] = useState(false);
   const [columnAmount, setColumnAmount] = useState(0);
   const { chain, chains } = useNetwork()
@@ -40,13 +40,7 @@ export function Modules() {
       functionName: 'image',
     }
 
-    const moduleIndividual_tokens: any = {
-      address: allModulesCall.data[i],
-      abi: contracts.module.abi,
-      functionName: 'getTokens',
-    }
-
-    moduleContracts.push(moduleIndividual_name, moduleIndividual_image, moduleIndividual_tokens)
+    moduleContracts.push(moduleIndividual_name, moduleIndividual_image)
   }
 
   const wrappersData: any = useContractReads({
@@ -66,11 +60,9 @@ export function Modules() {
     modules.push({
       name: chunk[0],
       image: chunk[1],
-      tokens: chunk[2].toString(),
       apy: '7.69',
       apyPerformance: '+4.79',
-      blockchain: chain?.name,
-      address: allModulesCall.data[i / 3]
+      address: allModulesCall.data[i / chunkSize]
     })
   }
 
@@ -80,6 +72,7 @@ export function Modules() {
     } else {
       setColumnAmount(modules.length);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filters = [
@@ -187,7 +180,7 @@ export function Modules() {
 
           <div className="max-h-min pb-6">
             {allModulesCall.data != undefined && allModulesCall.data.length > 0 ?
-              <div className={"grid gap-6 sm:grid-cols-" + columnAmount + " grid-cols-" + columnAmount + " lg:grid-cols-" + columnAmount}>
+              <div className={"grid gap-6 grid-cols-" + columnAmount}>
                 {modules.map((module: any, moduleId: number) => (
                   <div key={moduleId} className="col-span-1 divide-y divide-gray-200 rounded-lg bg-[#fcfcfc] shadow">
                     <div className="flex w-full items-center justify-between">

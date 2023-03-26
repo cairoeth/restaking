@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { CreateWrapperModal } from 'components/dashboard/modals/createWrapper'
 import { useContractRead, useContractReads, useAccount, useNetwork } from 'wagmi'
 import { contracts } from 'components/helpers/contracts'
+import { ethers } from "ethers";
 
 type Props = {
   data: any
@@ -55,8 +56,8 @@ export function CreateWrapper(wrapperAddress: any) {
     const image = "https://generative-placeholders.glitch.me/image?width=600&height=300&img=" + name
     const addressWrapper = wrapperAddress.wrapperAddress
     const underlying = wrapperData.data[2]
-    const totalSupply = wrapperData.data[3]
-    const yourBalance = wrapperData.data[4]
+    const totalSupply = ethers.utils.formatUnits(wrapperData.data[3], 18)
+    const yourBalance = ethers.utils.formatUnits(wrapperData.data[4], 18)
 
     return (
       <>

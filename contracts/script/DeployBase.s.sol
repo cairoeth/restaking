@@ -27,10 +27,14 @@ abstract contract DeployBase is Script {
             1000 ether
         );
 
-        new BasicModule("Basic Module", "https://i.imgur.com/lAwEdqL.png");
+        address wrapper = controller.createWrapper(address(underlyingToken));
+
+        BasicModule module = new BasicModule("Basic Module", "https://i.imgur.com/lAwEdqL.png");
+        module.addWrapper(wrapper);
+
         new BasicModule("Basic Module 2", "https://i.imgur.com/lAwEdqL.png");
         new BasicModule("Basic Module 3", "https://i.imgur.com/lAwEdqL.png");
-
+        new MockToken();
         vm.stopBroadcast();
     }
 }

@@ -75,8 +75,6 @@ contract RestakingController {
         tokenToWrapper[token] = wrapper;
 
         emit WrapperCreated(token, wrapper);
-
-        return wrapper;
     }
 
     function getWrapper(address token) public returns (address wrapper) {

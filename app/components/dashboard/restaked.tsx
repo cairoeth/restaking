@@ -2,42 +2,103 @@ import { UserIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline"
 import Image from 'next/image'
 import { ColumnRestaked } from "components/dashboard/column"
 import Link from 'next/link'
+import { useContractRead, useContractReads, useAccount, erc20ABI, useNetwork } from 'wagmi'
+import { contracts } from "components/helpers/contracts"
+import { ethers } from "ethers";
 
 export function RestakedStake() {
-  var modules: any = [
-    // {
-    //   slug: 'Optimism',
-    //   symbol: 'OP',
-    //   blockchain: 'Ethereum Mainnet',
-    //   image: 'https://gateway.optimism.io/static/media/optimism.caeb9392.svg',
-    //   stake: '818,094.32',
-    //   stakeUSD: '25,500',
-    //   rewardsTotal: '30,456',
-    //   rewardsTotalUSD: '60',
-    //   rewardsAvailable: '11,122',
-    //   rewardsAvailableUSD: '22',
-    //   accuracy: '99.22',
-    //   accuracyPerformance: '-0.04',
-    //   apy: '7.69',
-    //   apyPerformance: '+4.79'
-    // },
-    // {
-    //   slug: 'UMA',
-    //   symbol: 'UMA',
-    //   blockchain: 'Ethereum Mainnet',
-    //   image: 'https://storage.googleapis.com/ethglobal-api-production/organizations%2Ffp1x1%2Flogo%2F1664750381528_uma.jpeg',
-    //   stake: '218,094.32',
-    //   stakeUSD: '21,200',
-    //   rewardsTotal: '17,729',
-    //   rewardsTotalUSD: '155',
-    //   rewardsAvailable: '1,952',
-    //   rewardsAvailableUSD: '85',
-    //   accuracy: '99.89',
-    //   accuracyPerformance: '+0.02',
-    //   apy: '15.84',
-    //   apyPerformance: '+10.27'
-    // },
-  ]
+  const { chain } = useNetwork()
+  const { address } = useAccount()
+  const wrapperContracts: any = []
+  var modules: any = []
+
+  const controllerContract: any = {
+    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
+    abi: contracts.controller.abi,
+  }
+
+  const controllerData: any = useContractReads({
+    contracts: [
+      {
+        ...controllerContract,
+        functionName: 'allWrappers',
+      },
+      {
+        ...controllerContract,
+        functionName: 'allModules',
+      },
+    ],
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
+
+  console.log(controllerData?.data)
+
+  // loop over wrappers
+  for (let i = 0; i < controllerData?.data[0]?.length; i++) {
+    const wrapperContract: any = {
+      address: controllerData?.data[0][i],
+      abi: contracts.wrapper.abi,
+    }
+
+    // loop over modules
+    for (let j = 0; j < controllerData?.data[1]?.length; j++) {
+      const moduleContract: any = {
+        address: controllerData?.data[1][j],
+        abi: contracts.module.abi,
+      }
+
+      const wrapperContractRestaked = {
+        ...wrapperContract,
+        functionName: 'restakedAmount',
+        args: [address, controllerData?.data[1][j]]
+      }
+
+      const wrapperContractSymbol = {
+        ...wrapperContract,
+        functionName: 'symbol',
+      }
+
+      const moduleContractName = {
+        ...moduleContract,
+        functionName: 'name',
+      }
+
+      const moduleContractImage = {
+        ...moduleContract,
+        functionName: 'image',
+      }
+
+      wrapperContracts.push(wrapperContractRestaked, wrapperContractSymbol, moduleContractName, moduleContractImage)
+    }
+  }
+
+  const wrappersData: any = useContractReads({
+    contracts: wrapperContracts,
+    onError(error) {
+      console.log('Error', error)
+    },
+  })
+
+  for (let i = 0; i < wrappersData?.data?.length; i += 4) {
+    const chunk: any = wrappersData?.data?.slice(i, i + 4);
+    const restakedAmount: any = ethers.utils.formatUnits(chunk[0], 18)
+
+    if (restakedAmount > 0) {
+      modules.push({
+        image: chunk[3],
+        name: chunk[2],
+        restakedAmount: restakedAmount,
+        symbol: chunk[1],
+        address: controllerData?.data[1][i / 4],
+        underlying: controllerData?.data[0][i / 4],
+        underlying_symbol: chunk[1].substring(2)
+      })
+    } else {
+      continue
+    }
+  }
 
   return (
     <div className="card bg-base-100 shadow-xl mb-10">
@@ -53,36 +114,33 @@ export function RestakedStake() {
                 {modules.map((module: any, index: number) => (
                   <tr key={index}>
                     <td className='text-left'>
-                      <Link href={'/module/' + module.slug}>
+                      <Link href={'/module/' + module.address}>
                         <div className="flex items-center space-x-3">
                           <div className="avatar">
                             <div className="mask mask-squircle w-12 h-12 rounded-full">
-                              <Image width={600} height={600} src={module.image} alt={"Image of module " + module.slug} />
+                              <Image width={600} height={600} src={module.image} alt={"Image of module " + module.name} />
                             </div>
                           </div>
                           <div>
-                            <div className="text-lg font-bold">{module.slug}</div>
-                            <div className="text-base text-left text-gray-500">{module.blockchain}</div>
+                            <div className="text-lg font-bold">{module.name}</div>
+                            <div className="text-base text-left text-gray-500">{chain?.network}</div>
                           </div>
                         </div>
                       </Link>
                     </td>
-                    <ColumnRestaked first="Staked" second={module.stake + ' ' + module.symbol} third={'$' + module.stakeUSD} slug={module.slug} />
-                    <ColumnRestaked first="Total Rewards" second={module.rewardsTotal + ' ' + module.symbol} third={'$' + module.rewardsTotalUSD} slug={module.slug} />
-                    <ColumnRestaked first="Available Rewards" second={module.rewardsAvailable + ' ' + module.symbol} third={'$' + module.rewardsAvailableUSD} slug={module.slug} />
-                    <ColumnRestaked first="Accuracy" second={module.accuracy + '%'} third={module.accuracyPerformance + '%'} slug={module.slug} />
-                    <ColumnRestaked first="APY" second={module.apy + '%'} third={module.apyPerformance + '%'} slug={module.slug} />
+                    <ColumnRestaked first="Restaked amount" second={module.restakedAmount + ' ' + module.symbol} third={'$' + (parseFloat(module.restakedAmount) * 1.0)} slug={module.address} />
+                    <ColumnRestaked first="Underyling token" second={module.underlying} third={module.underlying_symbol} slug={module.address} />
                     <td>
                       <div className="flex-none">
-                        <button className="btn btn-sm btn-primary btn-outline btn-circle align-middle">
+                        <Link className="btn btn-sm btn-primary btn-outline btn-circle align-middle" href={'/module/' + module.address}>
                           <PlusIcon className="h-6 w-6" />
-                        </button>
-                        <button className="btn btn-sm btn-primary btn-outline btn-circle ml-4 align-middle">
+                        </Link>
+                        <Link className="btn btn-sm btn-primary btn-outline btn-circle ml-4 align-middle" href={'/module/' + module.address}>
                           <MinusIcon className="h-6 w-6" />
-                        </button>
-                        <button className="btn btn-sm btn-secondary btn-outline ml-4 align-middle">
+                        </Link>
+                        <Link className="btn btn-sm btn-secondary btn-outline ml-4 align-middle" href={'/module/' + module.address}>
                           Claim
-                        </button>
+                        </Link>
                       </div>
                     </td>
                   </tr>

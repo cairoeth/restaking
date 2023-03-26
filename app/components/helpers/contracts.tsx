@@ -66,10 +66,10 @@ export const contracts = {
         ],
       },
       {
-        inputs: [{indexed: true, internalType: "address", name: "module", type: "address"}],
+        inputs: [{ indexed: true, internalType: "address", name: "module", type: "address" }],
         name: "ModuleAdded",
         type: "event"
-      }
+      },
     ]
   },
   wrapper: {
@@ -117,6 +117,44 @@ export const contracts = {
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }
         ],
       },
+      {
+        inputs: [{ internalType: "address", name: "module", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }],
+        name: "depositAndRestake",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function"
+      },
+      {
+        inputs: [{ internalType: "address", name: "module", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }],
+        name: "unrestakeAndWithdraw",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function"
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address"
+          },
+          {
+            internalType: "address",
+            nam: "",
+            type: "address"
+          }
+        ],
+        name: "restakedAmount",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256"
+          }
+        ],
+        stateMutability: "view",
+        type: "function"
+      }
     ]
   },
   module: {
@@ -137,7 +175,7 @@ export const contracts = {
       },
       {
         inputs: [],
-        name: "getTokens",
+        name: "getWrappers",
         outputs: [{ internalType: "address[]", name: "", type: "address[]" }],
         stateMutability: "view",
         type: "function"

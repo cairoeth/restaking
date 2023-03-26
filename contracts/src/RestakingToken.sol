@@ -24,6 +24,9 @@ contract rsToken is ERC20 {
     /// @notice Controller address.
     address public immutable controller;
 
+    /// @dev Store the restaked modules.
+    address[] public restakedModules;
+
     /// @notice The amount of tokens restaked into a module by an address
     mapping(address => mapping(address => uint256)) public restakedAmount;
 
@@ -53,9 +56,13 @@ contract rsToken is ERC20 {
     /// @param decimals The number of decimals of the token.
     /// @param token The address of the underlying wrapped token.
     /// @param token The controller address.
-    constructor(string memory name, string memory symbol, uint8 decimals, address token, address _controller)
-        ERC20(name, symbol, decimals)
-    {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint8 decimals,
+        address token,
+        address _controller
+    ) ERC20(name, symbol, decimals) {
         wrapped = token;
         controller = _controller;
     }
@@ -67,6 +74,26 @@ contract rsToken is ERC20 {
     // TODO: add 'from' arg
     function restake(address module, uint256 amount) public returns (bool) {
         restakedAmount[msg.sender][module] = amount;
+
+    function depositAndRestake(
+        address module,
+        uint256 amount
+    ) public returns (bool) {
+        deposit(msg.sender, msg.sender, amount);
+        restake(msg.sender, module, amount);
+
+        return true;
+    }
+
+    function unrestakeAndWithdraw(
+        address module,
+        uint256 amount
+    ) public returns (bool) {
+        restake(msg.sender, module, 0);
+        withdraw(msg.sender, msg.sender, amount);
+
+        return true;
+    }
 
         //emit Restake(msg.sender, module, amount);
         Module(module).updateCallback(msg.sender, amount);
@@ -116,11 +143,26 @@ contract rsToken is ERC20 {
         return true;
     }
 
+
     function getLockableAmount(address user, address by) public view returns (uint256) {
         if (restakedAmount[user][by] >= balanceOf[user]) {
             return balanceOf[user];
         } else {
             return restakedAmount[user][by];
+
+
+    /*//////////////////////////////////////////////////////////////
+                             VIEW FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    /// @notice Returns all the created wrappers.
+    function getRestakedModules(address user) public view returns (address[] memory m, uint256[] memory a) {
+        m = new address[](restakedModules.length);
+        a = new uint256[](restakedModules.length);
+
+        for (uint256 i = 0; i < restakedModules.length; i++) {
+            m[i] = restakedModules[i];
+            a[i] = restakedAmount[user][restakedModules[i]];
         }
     }
 }

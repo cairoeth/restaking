@@ -81,4 +81,29 @@ contract TestRestakingController is Test {
 
         assertTrue(controller.modules(0) == module);
     }
+
+    /// @dev Test deposit and restake.
+    function testDepositAndRestake() public {
+        vm.startPrank(USER);
+
+        rsToken wrapper = rsToken(controller.createWrapper(address(underlyingToken)));
+        address module = address(new BasicModule('Basic Module', 'https://example.com/image.png'));
+        controller.addModule(module);
+
+        underlyingToken.approve(address(wrapper), 1000 ether);
+        wrapper.depositAndRestake(module, 10 ether);
+    }
+
+    function testUnrestakeAndWithdraw() public {
+        vm.startPrank(USER);
+
+        rsToken wrapper = rsToken(controller.createWrapper(address(underlyingToken)));
+        address module = address(new BasicModule('Basic Module', 'https://example.com/image.png'));
+        controller.addModule(module);
+
+        underlyingToken.approve(address(wrapper), 1000 ether);
+        wrapper.depositAndRestake(module, 10 ether);
+
+        wrapper.unrestakeAndWithdraw(module, 10 ether);
+    }
 }
