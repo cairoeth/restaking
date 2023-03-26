@@ -13,7 +13,7 @@ export default function App() {
   const { module } = router.query
 
   useEffect(() => {
-    document.title = "Dashboard - Restaking";
+    document.title = "Module - Restaking.wtf";
     document.documentElement.setAttribute("data-theme", "winter");
     document.documentElement.className = 'bg-base-300';
   });

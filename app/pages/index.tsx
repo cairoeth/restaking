@@ -12,7 +12,7 @@ import Link from 'next/link'
 
 export default function App() {
   useEffect(() => {
-    document.title = "Dashboard - Restaking";
+    document.title = "Dashboard - Restaking.wtf";
     document.documentElement.setAttribute("data-theme", "winter");
     document.documentElement.className = 'bg-base-300';
   });
@@ -44,7 +44,7 @@ export default function App() {
       <div className="px-4 sm:px-6 lg:px-40 bg-base-300 gap-y-2">
 
         <div className="relative isolate px-6 pt-14 lg:px-8">
-          <div className="mx-auto max-w-2xl py-28 sm:py-44 lg:py-52">
+          <div className="mx-auto max-w-2xl py-28 sm:py-44 lg:py-48">
             <div className="hidden sm:mb-8 sm:flex sm:justify-center">
               <div className="relative rounded-full py-1 px-3 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                 The first public restaking framework. <Link href="https://ethglobal.com/showcase/restaking-wtf-z4ysh" className="font-semibold text-indigo-600"><span className="absolute inset-0" aria-hidden="true"></span>Read more <span aria-hidden="true">&rarr;</span></Link>
