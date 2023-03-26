@@ -64,6 +64,7 @@ contract rsToken is ERC20 {
     function restake(address module, uint256 amount) public returns (bool) {
         restakedAmount[msg.sender][module] = amount;
 
+        // TODO: trigger callback in module
         //emit Restake(msg.sender, module, amount);
 
         return true;
@@ -113,5 +114,5 @@ contract rsToken is ERC20 {
         return true;
     }
 
-    // TODO: add lock function
+    // TODO: add getLockableAmount function
 }
