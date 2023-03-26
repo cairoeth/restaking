@@ -7,12 +7,11 @@ import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 /// @title Restaking Token
 /// @author cairoeth
 /// @author 0xfuturistic
-/// @notice Token wrapper that allows to restake.
 contract rsToken is ERC20 {
     using SafeTransferLib for ERC20;
 
     /*//////////////////////////////////////////////////////////////
-                                ADDRESSES
+                                Variables
     //////////////////////////////////////////////////////////////*/
 
     /// @notice Underlying wrapped token address.
@@ -21,17 +20,8 @@ contract rsToken is ERC20 {
     /// @notice Controller address.
     address public immutable controller;
 
-    /// @notice The amount of tokens assigned to a module by a given restaker.
-    mapping(address => mapping(address => uint256)) public assignedBalance;
-
-    /// @notice The amount of tokens locked by to a module by a given restaker.
-    mapping(address => mapping(address => uint256)) public lockedBalance;
-
-    /// @notice Store the unlocked balance of restakers.
-    mapping(address => uint256) public unlockedBalance;
-
-    /// @notice Store the locked balance of restakers.
-    mapping(address => uint256) public lockedBalance;
+    /// @notice The amount of tokens restaked into a module by an address
+    mapping(address => mapping(address => uint256)) public restakedAmount;
 
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
@@ -59,13 +49,9 @@ contract rsToken is ERC20 {
     /// @param decimals The number of decimals of the token.
     /// @param token The address of the underlying wrapped token.
     /// @param token The controller address.
-    constructor(
-        string memory name,
-        string memory symbol,
-        uint8 decimals,
-        address token,
-        address _controller
-    ) ERC20(name, symbol, decimals) {
+    constructor(string memory name, string memory symbol, uint8 decimals, address token, address _controller)
+        ERC20(name, symbol, decimals)
+    {
         wrapped = token;
         controller = _controller;
     }
@@ -74,46 +60,55 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
-    /// @notice Mint restaking token
-    /// @param receiver The address to receive the restaking token (restaker).
-    /// @param amount The amount to mint.
-    function deposit(address receiver, uint256 amount) external {
-        ERC20(wrapped).safeTransferFrom(receiver, address(this), amount);
-        _mint(receiver, amount);
+    function restake(address from, address recipient, uint256 amount) public returns (bool) {
+        restakedAmount[from][recipient] = amount;
 
-        // unlockedBalance[restaker] += amount;
+        //emit Restake(msg.sender, module, amount);
+
+        return true;
     }
 
-    /// @notice Withdraw underlying token by burning the restaking token.
-    /// @param restaker The restaker address
-    /// @param amount The amount to withdraw.
-    function withdraw(address restaker, uint256 amount) external {
-        // if (amount > unlockedBalance[restaker]) revert Insufficient();
+    // we override the default transferFrom function for restaking
+    // note: for restaking tokens, the allowance is not considered. only the restaked amount
+    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
+        uint256 allowed = restakedAmount[from][msg.sender]; // Saves gas for limited approvals.
 
-        _burn(restaker, amount);
-        ERC20(wrapped).safeTransfer(restaker, amount);
+        // note: unlike allowance, the restaked amount doesn't decrease
+        //if (allowed != type(uint256).max) allowance[from][msg.sender] = allowed - amount;
 
-        // unlockedBalance[restaker] -= amount;
+        balanceOf[from] -= amount;
+
+        // Cannot overflow because the sum of all user
+        // balances can't exceed the max uint256 value.
+        unchecked {
+            balanceOf[to] += amount;
+        }
+
+        emit Transfer(from, to, amount);
+
+        return true;
     }
 
-    // /// @notice Set the unlocked and locked balances of a restaker.
-    // /// @param amount The amount of tokens to lock.
-    // function lock(address restaker, uint256 amount) external onlyController {
-    //     unlockedBalance[restaker] -= amount;
-    //     lockedBalance[restaker] += amount;
+    function deposit(address from, address recipient, uint256 amount) public returns (bool) {
+        ERC20(wrapped).safeTransferFrom(from, address(this), amount);
 
-    //     if ((unlockedBalance[restaker] + lockedBalance[restaker]) != balanceOf(restaker)) revert Insufficient();
-    // }
+        _mint(recipient, amount);
 
-    // /// @notice Assigns a given amount of wrapper tokens to a module.
-    // /// @param restaker The restaker address
-    // /// @param module The address of the module.
-    // /// @param amount The amount to withdraw.
-    // function assign(address restaker, address module, uint256 amount) public virtual returns (bool) {
-    //     allowance[msg.sender][spender] += amount;
+        //emit Deposit(msg.sender, amount);
 
-    //     emit Approval(msg.sender, spender, amount);
+        return true;
+    }
 
-    //     return true;
-    // }
+    function withdraw(address from, address recipient, uint256 amount) public returns (bool) {
+        if (balanceOf[from] < amount) revert Insufficient();
+
+        _burn(from, amount);
+        ERC20(wrapped).safeTransferFrom(address(this), recipient, amount);
+
+        //emit withdraw(msg.sender, amount);
+
+        return true;
+    }
+
+    // TODO: add lock function
 }
