@@ -31,31 +31,10 @@ type PropsModal = {
 function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
   const [amount, setAmount] = React.useState('');
   const [wrapper, setWrapper] = React.useState('');
+  const [toggle, setToggle] = React.useState(false);
   const debouncedAmount = useDebounce(amount)
-  const debouncedWrapper = useDebounce(wrapper)
-  const { chain, chains } = useNetwork()
+  const debouncedModuleAddress = useDebounce(moduleAddress)
   const { address } = useAccount()
-
-  // const {
-  //   config,
-  //   error: prepareError,
-  //   isError: isPrepareError,
-  // } = usePrepareContractWrite({
-  //   address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
-  //   abi: contracts.controller.abi,
-  //   functionName: 'addModule',
-  //   args: [debouncedWrapper, debouncedAmount],
-  //   enabled: Boolean([debouncedWrapper, debouncedAmount]),
-  // })
-  // const { data, error, isError, write } = useContractWrite(config)
-
-  // const { isLoading, isSuccess } = useWaitForTransaction({
-  //   hash: data?.hash,
-  // })
-
-  // if (isSuccess) {
-  //   window.location.reload();
-  // }
 
   /////////////////// symbols ///////////////////
 
@@ -99,7 +78,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
     wrapperData.push({
       symbol_wrapped: chunk[0],
       symbol_underlying: chunk[0].substring(2),
-      balance_wrapper: chunk[1],
+      balance_wrapper: ethers.utils.formatUnits(chunk[1], 18),
       balance_underlying: 0,
       decimals_underlying: 18,
       address: wrappers[i / 3],
@@ -124,16 +103,16 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
   })
 
   for (let i = 0; i < getUnderlyingData.data?.length; ++i) {
-    wrapperData[i].balance_underlying = ethers.utils.formatUnits(getUnderlyingData.data[i], wrapperData[i].decimals_underlying)
+    wrapperData[i].balance_underlying = ethers.utils.formatUnits(getUnderlyingData?.data[i] || ethers.BigNumber, wrapperData[i].decimals_underlying)
   }
 
   //////////
 
   const approve_tx = usePrepareContractWrite({
-    address: wrapperData[Number(wrapper)].address_underlying,
+    address: wrapperData[Number(wrapper)]?.address_underlying,
     abi: erc20ABI,
     functionName: 'approve',
-    args: [wrapperData[Number(wrapper)].address, ethers.constants.MaxUint256],
+    args: [wrapperData[Number(wrapper)]?.address, ethers.constants.MaxUint256],
   })
 
   const write_approve_tx = useContractWrite(approve_tx.config)
@@ -141,6 +120,32 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
   const status_approve_tx = useWaitForTransaction({
     hash: write_approve_tx.data?.hash,
   })
+
+  ////
+
+  const restake_tx = usePrepareContractWrite({
+    address: wrapperData[Number(wrapper)]?.address,
+    abi: contracts.wrapper.abi,
+    functionName: 'depositAndRestake',
+    args: [debouncedModuleAddress, ethers.utils.parseUnits(debouncedAmount.toString() || '0', wrapperData[Number(wrapper)]?.decimals_underlying)],
+  })
+
+  const write_restake_tx = useContractWrite(restake_tx.config)
+
+  const status_restake_tx = useWaitForTransaction({
+    hash: write_approve_tx.data?.hash,
+  })
+
+  if (status_approve_tx.isSuccess && !toggle) {
+    setToggle(true)
+    write_restake_tx.write?.()
+  }
+
+  if (status_approve_tx.isSuccess && status_restake_tx.isSuccess) {
+    window.location.reload();
+  }
+
+  console.log(wrapperData)
 
   return (
     <>
@@ -177,7 +182,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
                   className="input input-bordered w-full"
                   value={amount}
                 />
-                <span>{wrapperData[Number(wrapper)].symbol_wrapped}</span>
+                <span>{wrapperData[Number(wrapper)]?.symbol_wrapped}</span>
               </label>
             </div>
 
@@ -185,17 +190,17 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
             <dl className="mb-4 space-y-2">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-base-600">Balance underlying</dt>
-                <dd className="text-sm font-medium text-base-900">{wrapperData[Number(wrapper)].balance_underlying + " " + wrapperData[Number(wrapper)].symbol_underlying}</dd>
+                <dd className="text-sm font-medium text-base-900">{wrapperData[Number(wrapper)]?.balance_underlying + " " + wrapperData[Number(wrapper)]?.symbol_underlying}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-sm text-base-600">Balance wrapped (current)</dt>
-                <dd className="text-sm font-medium text-base-900">{wrapperData[Number(wrapper)].balance_wrapper + " " + wrapperData[Number(wrapper)].symbol_wrapped}</dd>
+                <dt className="text-sm text-base-600">Restaked amount (current)</dt>
+                <dd className="text-sm font-medium text-base-900">{wrapperData[Number(wrapper)]?.balance_wrapper + " " + wrapperData[Number(wrapper)]?.symbol_wrapped}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-sm text-base-600">Balance wrapped (after)</dt>
-                <dd className="text-sm font-medium text-base-900">{(parseInt(wrapperData[Number(wrapper)].balance_wrapper) || 0 + parseInt(amount) || 0)  + " " + wrapperData[Number(wrapper)].symbol_wrapped}</dd>
+                <dt className="text-sm text-base-600">Restaked amount (after)</dt>
+                <dd className="text-sm font-medium text-base-900">{(parseInt(wrapperData[Number(wrapper)]?.balance_wrapper) || 0 + parseInt(amount) || 0)  + " " + wrapperData[Number(wrapper)]?.symbol_wrapped}</dd>
               </div>
-              <div className="flex items-center justify-between border-t border-base-200 pt-2">
+              {/* <div className="flex items-center justify-between border-t border-base-200 pt-2">
                 <dt className="flex text-sm text-base-600">
                   <span>Used amount</span>
                 </dt>
@@ -206,7 +211,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
                   <span>Variable APY (after)</span>
                 </dt>
                 <dd className="text-sm font-medium text-base-900">0%</dd>
-              </div>
+              </div> */}
             </dl>
           </>
           : ''
@@ -223,17 +228,17 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
           </div>
         </button>
 
-        {status_approve_tx.isSuccess && (
+        {/* {status_approve_tx.isSuccess && (
           <div>
             Successfully added module!
             <div>
-              <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
+              <a href={`https://etherscan.io/tx/${write_approve_tx?.hash}`}>Etherscan</a>
             </div>
           </div>
         )}
         {(approve_tx.isError) && (
           <div>Error: {approve_tx.error?.message}</div>
-        )}
+        )} */}
       </form>
     </>
   )
@@ -246,10 +251,6 @@ function Unrestake({ moduleAddress }: PropsUnrestake): JSX.Element {
 }
 
 export function ActionModal({ _restakeActive, moduleAddress, data }: PropsModal): JSX.Element {
-  const [supplied, setSupplied] = React.useState(0);
-  const [supplyAPY, setSupplyAPY] = React.useState(0);
-  const [minCollateraliation, setMinCollateraliation] = React.useState(0);
-
   const [restakeActive, setEnroll] = React.useState(_restakeActive)
 
   const setRestakeActive = () => {

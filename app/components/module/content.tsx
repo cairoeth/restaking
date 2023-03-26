@@ -44,7 +44,7 @@ export function ModuleContent({ module }: { module: string }) {
       name: moduleData.data[0],
       address: module,
       APY: '10.14',
-      tvl: '8.33M',
+      tvl: '<100k',
       restakers: '69',
       available: '8.144',
       total: '16.288',

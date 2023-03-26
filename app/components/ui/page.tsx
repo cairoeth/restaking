@@ -9,7 +9,7 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { Chain } from 'wagmi'
 
 export const restaking = {
-  id: 690692,
+  id: 690694,
   name: 'Restaking',
   network: 'Restaking',
   nativeCurrency: {

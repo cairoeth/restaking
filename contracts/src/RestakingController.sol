@@ -104,7 +104,7 @@ contract RestakingController {
     function restake(address token, address module, uint256 amount) external {
         address wrapper = getWrapper(token);
 
-        rsToken(wrapper).restake(msg.sender, wrapper, amount);
+        rsToken(wrapper).restake(msg.sender, module, amount);
     }
 
     function transferFrom(address token, address from, address to, uint256 amount) external {

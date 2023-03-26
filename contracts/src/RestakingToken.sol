@@ -60,6 +60,13 @@ contract rsToken is ERC20 {
                              RESTAKING LOGIC
     //////////////////////////////////////////////////////////////*/
 
+    function depositAndRestake(address module, uint256 amount) public returns (bool) {
+        deposit(msg.sender, msg.sender, amount);
+        restake(msg.sender, module, amount);
+
+        return true;
+    }
+
     function restake(address from, address recipient, uint256 amount) public returns (bool) {
         restakedAmount[from][recipient] = amount;
 

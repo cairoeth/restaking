@@ -66,7 +66,7 @@ export const contracts = {
         ],
       },
       {
-        inputs: [{indexed: true, internalType: "address", name: "module", type: "address"}],
+        inputs: [{ indexed: true, internalType: "address", name: "module", type: "address" }],
         name: "ModuleAdded",
         type: "event"
       }
@@ -117,6 +117,13 @@ export const contracts = {
         outputs: [{ internalType: "uint256", name: "", type: "uint256" }
         ],
       },
+      {
+        inputs: [{ internalType: "address", name: "module", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }],
+        name: "depositAndRestake",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function"
+      }
     ]
   },
   module: {
