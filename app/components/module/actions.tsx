@@ -36,26 +36,26 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
 
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-  } = usePrepareContractWrite({
-    address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
-    abi: contracts.controller.abi,
-    functionName: 'addModule',
-    args: [debouncedWrapper, debouncedAmount],
-    enabled: Boolean([debouncedWrapper, debouncedAmount]),
-  })
-  const { data, error, isError, write } = useContractWrite(config)
+  // const {
+  //   config,
+  //   error: prepareError,
+  //   isError: isPrepareError,
+  // } = usePrepareContractWrite({
+  //   address: contracts['controller']['address'][chain?.name as keyof typeof contracts['controller']['address']] as `0x${string}`,
+  //   abi: contracts.controller.abi,
+  //   functionName: 'addModule',
+  //   args: [debouncedWrapper, debouncedAmount],
+  //   enabled: Boolean([debouncedWrapper, debouncedAmount]),
+  // })
+  // const { data, error, isError, write } = useContractWrite(config)
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  })
+  // const { isLoading, isSuccess } = useWaitForTransaction({
+  //   hash: data?.hash,
+  // })
 
-  if (isSuccess) {
-    window.location.reload();
-  }
+  // if (isSuccess) {
+  //   window.location.reload();
+  // }
 
   /////////////////// symbols ///////////////////
 
@@ -102,7 +102,8 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
       balance_wrapper: chunk[1],
       balance_underlying: 0,
       decimals_underlying: 18,
-      address: wrappers[i / 3]
+      address: wrappers[i / 3],
+      address_underlying: chunk[2]
     })
 
     const underlyingIndividual_balanceOf: any = {
@@ -126,14 +127,27 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
     wrapperData[i].balance_underlying = ethers.utils.formatUnits(getUnderlyingData.data[i], wrapperData[i].decimals_underlying)
   }
 
-  console.log(wrapperData)
+  //////////
+
+  const approve_tx = usePrepareContractWrite({
+    address: wrapperData[Number(wrapper)].address_underlying,
+    abi: erc20ABI,
+    functionName: 'approve',
+    args: [wrapperData[Number(wrapper)].address, ethers.constants.MaxUint256],
+  })
+
+  const write_approve_tx = useContractWrite(approve_tx.config)
+
+  const status_approve_tx = useWaitForTransaction({
+    hash: write_approve_tx.data?.hash,
+  })
 
   return (
     <>
       <form
         onSubmit={(e) => {
           e.preventDefault()
-          write?.()
+          write_approve_tx.write?.()
         }}
       >
         <div className="form-control">
@@ -179,7 +193,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
               </div>
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-base-600">Balance wrapped (after)</dt>
-                <dd className="text-sm font-medium text-base-900">{wrapperData[Number(wrapper)].balance_wrapper + " " + wrapperData[Number(wrapper)].symbol_wrapped}</dd>
+                <dd className="text-sm font-medium text-base-900">{(parseInt(wrapperData[Number(wrapper)].balance_wrapper) || 0 + parseInt(amount) || 0)  + " " + wrapperData[Number(wrapper)].symbol_wrapped}</dd>
               </div>
               <div className="flex items-center justify-between border-t border-base-200 pt-2">
                 <dt className="flex text-sm text-base-600">
@@ -198,9 +212,9 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
           : ''
         }
 
-        <button disabled={!write || isLoading} className="btn btn-block space-x-2 mt-4">
+        <button disabled={!write_approve_tx.write || status_approve_tx.isLoading} className="btn btn-block space-x-2 mt-4">
           <div className="inline-flex items-center">
-            {isLoading ? 'Restaking...' :
+            {status_approve_tx.isLoading ? 'Restaking...' :
               <>
                 <ArrowSmallUpIcon className="w-6 h-6 mr-2" />
                 Restake
@@ -209,7 +223,7 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
           </div>
         </button>
 
-        {isSuccess && (
+        {status_approve_tx.isSuccess && (
           <div>
             Successfully added module!
             <div>
@@ -217,8 +231,8 @@ function Restake({ moduleAddress, wrappers }: PropsRestake): JSX.Element {
             </div>
           </div>
         )}
-        {(isPrepareError || isError) && (
-          <div>Error: {(prepareError || error)?.message}</div>
+        {(approve_tx.isError) && (
+          <div>Error: {approve_tx.error?.message}</div>
         )}
       </form>
     </>
