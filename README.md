@@ -23,7 +23,7 @@
 
 <tr><td>Goerli</td><td>
 
-[0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884](https://goerli.etherscan.io/address/0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884)
+[0xa0C21F3f1359f45890f918CFd340361CcD91627B](https://goerli.etherscan.io/address/0xa0C21F3f1359f45890f918CFd340361CcD91627B)
 
 </td></tr>
 

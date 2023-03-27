@@ -33,9 +33,7 @@ export function RestakedStake() {
     },
   })
 
-  console.log(controllerData?.data)
 
-  // loop over wrappers
   for (let i = 0; i < controllerData?.data[0]?.length; i++) {
     const wrapperContract: any = {
       address: controllerData?.data[0][i],
