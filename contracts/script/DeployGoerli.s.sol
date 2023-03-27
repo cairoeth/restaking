@@ -3,8 +3,8 @@ pragma solidity ^0.8.18;
 
 import {DeployBase} from "./DeployBase.s.sol";
 
-contract DeployScroll is DeployBase {
-    address public immutable _controller = 0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884;
+contract DeployGoerli is DeployBase {
+    address public immutable _controller = 0xa0C21F3f1359f45890f918CFd340361CcD91627B;
 
     constructor() DeployBase(_controller) {}
 }
