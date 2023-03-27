@@ -47,26 +47,66 @@
 
 </td>
 
-<td>N/A</td>
+<td>
 
-<td>N/A</td>
+[0x8962e49f44BD8C609b56A1a202D196779A1Fa331](https://goerli.etherscan.io/address/0x8962e49f44BD8C609b56A1a202D196779A1Fa331)
+
+</td>
+
+<td>
+
+[0xe1b6DE0Ba1C7814822458909bA9e2f7bCB7FEd58](https://goerli.etherscan.io/address/0xe1b6DE0Ba1C7814822458909bA9e2f7bCB7FEd58)
+
+</td>
 
 <td>N/A</td>
 
 <td>N/A</td>
 </tr>
 
-<tr><td>Optimism</td><td>
+<tr><td>Optimism</td>
 
-[](https://optimistic.etherscan.io/address/)
+<td>
 
-</td><td
-0x933Aa03B9317131b37d875A1D37efc755186E46e
-</td><td>
+[0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884](https://optimistic.etherscan.io/address/0x94e9b8a9bf9c7d8e8a3af85a387b1cbff2a47884)
+
+</td>
+  
+<td>
+
+[0xb76633e091B70b41Fbc7c1D865Fa20bC41B242A3](https://optimistic.etherscan.io/address/0xb76633e091B70b41Fbc7c1D865Fa20bC41B242A3)
+
+</td>
+  
+<td>
+
+[0x7553ED9b18B2134b2e5FD33700FfDe67156329E5](https://optimistic.etherscan.io/address/0x7553ED9b18B2134b2e5FD33700FfDe67156329E5)
+
+</td>
+  
+<td>
+
+[0x9c9b5bF299b4159C4A95Fa550fCd5a1badb9fa9D](https://optimistic.etherscan.io/address/0x9c9b5bF299b4159C4A95Fa550fCd5a1badb9fa9D)
+
+</td>
+  
+<td>
+
+[0x99F839F60D9D88eAb969b0AB3E4941604810dA0b](https://optimistic.etherscan.io/address/0x99F839F60D9D88eAb969b0AB3E4941604810dA0b)
+
+</td>
+  
+<td>
+  
 0xB8Fc214C91fecc78c4C929782DA99A90D8b5671b</td>
 
-<td>0xf373A69Abe261fD1CD7BF9189b9753cE8689bc28
-</td></tr>
+<td>
+  
+0xf373A69Abe261fD1CD7BF9189b9753cE8689bc28
+  
+</td>
+  
+</tr>
 
 <tr>
 <td>Gnosis Chain</td>
@@ -148,17 +188,51 @@
 
 </tr>
 
-<tr><td>Polygon zkEVM Testnet</td><td>
+<tr><td>Polygon zkEVM Testnet</td>
+  
+<td>
 
 [0xb76633e091B70b41Fbc7c1D865Fa20bC41B242A3](https://explorer.public.zkevm-test.net/address/0xb76633e091B70b41Fbc7c1D865Fa20bC41B242A3)
+  
+</td>
+  
+<td>
 
-</td><td
-0x933Aa03B9317131b37d875A1D37efc755186E46e
-</td><td>
-0xB8Fc214C91fecc78c4C929782DA99A90D8b5671b</td>
+[0xa71CC3f4DeE5C58f882696557A4869374F9E6599](https://explorer.public.zkevm-test.net/address/0xa71CC3f4DeE5C58f882696557A4869374F9E6599)
 
-<td>0xf373A69Abe261fD1CD7BF9189b9753cE8689bc28
-</td></tr>
+</td>
+  
+<td>
+
+[0x9c9b5bF299b4159C4A95Fa550fCd5a1badb9fa9D](https://explorer.public.zkevm-test.net/address/0x9c9b5bF299b4159C4A95Fa550fCd5a1badb9fa9D)
+
+</td>
+  
+<td>
+
+[0x99F839F60D9D88eAb969b0AB3E4941604810dA0b](https://explorer.public.zkevm-test.net/address/0x99F839F60D9D88eAb969b0AB3E4941604810dA0b)
+
+</td>
+  
+<td>
+
+[0x87061BE3236853bFf019e36a57ae34C058456A55](https://explorer.public.zkevm-test.net/address/0x87061BE3236853bFf019e36a57ae34C058456A55)
+
+</td>
+  
+<td>
+  
+0xB8Fc214C91fecc78c4C929782DA99A90D8b5671b
+  
+</td>
+
+<td>
+  
+0xf373A69Abe261fD1CD7BF9189b9753cE8689bc28
+  
+</td>
+
+</tr>
 
 </table>
 420 Chain ID for L3 deployments
