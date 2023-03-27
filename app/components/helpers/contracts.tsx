@@ -28,11 +28,11 @@ export const contracts = {
   controller: {
     address: {
       Restaking: '0x25A1DF485cFBb93117f12fc673D87D1cddEb845a',
-      Goerli: '',
+      Goerli: '0xa0C21F3f1359f45890f918CFd340361CcD91627B',
       Optimism: '',
-      Gnosis: '',
-      'Scroll Testnet': '',
-      'Polygon zkEVM Testnet': ''
+      Gnosis: '0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884',
+      'Scroll Testnet': '0x94E9b8A9bf9C7d8e8A3AF85A387b1CbFf2a47884',
+      'Polygon zkEVM Testnet': '0xb76633e091B70b41Fbc7c1D865Fa20bC41B242A3'
     },
     abi: [
       {

@@ -66,14 +66,18 @@ contract TestRestakingController is Test {
         vm.expectRevert();
         controller.createWrapper(address(underlyingToken));
 
-        assertTrue(controller.tokenToWrapper(address(underlyingToken)) == wrapper);
+        assertTrue(
+            controller.tokenToWrapper(address(underlyingToken)) == wrapper
+        );
     }
 
     /// @dev Check that module can be added to the controller if it follows the interface.
     function testAddModule() public {
         vm.startPrank(USER);
 
-        address module = address(new BasicModule('Basic Module', 'https://example.com/image.png'));
+        address module = address(
+            new BasicModule("Basic Module", "https://example.com/image.png")
+        );
         controller.addModule(module);
 
         vm.expectRevert();
@@ -86,8 +90,12 @@ contract TestRestakingController is Test {
     function testDepositAndRestake() public {
         vm.startPrank(USER);
 
-        rsToken wrapper = rsToken(controller.createWrapper(address(underlyingToken)));
-        address module = address(new BasicModule('Basic Module', 'https://example.com/image.png'));
+        rsToken wrapper = rsToken(
+            controller.createWrapper(address(underlyingToken))
+        );
+        address module = address(
+            new BasicModule("Basic Module", "https://example.com/image.png")
+        );
         controller.addModule(module);
 
         underlyingToken.approve(address(wrapper), 1000 ether);
@@ -97,13 +105,24 @@ contract TestRestakingController is Test {
     function testUnrestakeAndWithdraw() public {
         vm.startPrank(USER);
 
-        rsToken wrapper = rsToken(controller.createWrapper(address(underlyingToken)));
-        address module = address(new BasicModule('Basic Module', 'https://example.com/image.png'));
+        rsToken wrapper = rsToken(
+            controller.createWrapper(address(underlyingToken))
+        );
+        address module = address(
+            new BasicModule("Basic Module", "https://example.com/image.png")
+        );
         controller.addModule(module);
 
         underlyingToken.approve(address(wrapper), 1000 ether);
         wrapper.depositAndRestake(module, 10 ether);
 
         wrapper.unrestakeAndWithdraw(module, 10 ether);
+    }
+
+    function testAllWrappersAndModules() public {
+        vm.startPrank(USER);
+
+        controller.allWrappers();
+        controller.allModules();
     }
 }

@@ -33,44 +33,45 @@ export function RestakedStake() {
     },
   })
 
-  console.log(controllerData?.data)
+  if (controllerData.data != null) {
+    const length = controllerData.data[0].length
 
-  // loop over wrappers
-  for (let i = 0; i < controllerData?.data[0]?.length; i++) {
-    const wrapperContract: any = {
-      address: controllerData?.data[0][i],
-      abi: contracts.wrapper.abi,
-    }
-
-    // loop over modules
-    for (let j = 0; j < controllerData?.data[1]?.length; j++) {
-      const moduleContract: any = {
-        address: controllerData?.data[1][j],
-        abi: contracts.module.abi,
+    for (let i = 0; i < length; i++) {
+      const wrapperContract: any = {
+        address: controllerData.data[0][i],
+        abi: contracts.wrapper.abi,
       }
 
-      const wrapperContractRestaked = {
-        ...wrapperContract,
-        functionName: 'restakedAmount',
-        args: [address, controllerData?.data[1][j]]
-      }
+      // loop over modules
+      for (let j = 0; j < length; j++) {
+        const moduleContract: any = {
+          address: controllerData.data[1][j],
+          abi: contracts.module.abi,
+        }
 
-      const wrapperContractSymbol = {
-        ...wrapperContract,
-        functionName: 'symbol',
-      }
+        const wrapperContractRestaked = {
+          ...wrapperContract,
+          functionName: 'restakedAmount',
+          args: [address, controllerData.data[1][j]]
+        }
 
-      const moduleContractName = {
-        ...moduleContract,
-        functionName: 'name',
-      }
+        const wrapperContractSymbol = {
+          ...wrapperContract,
+          functionName: 'symbol',
+        }
 
-      const moduleContractImage = {
-        ...moduleContract,
-        functionName: 'image',
-      }
+        const moduleContractName = {
+          ...moduleContract,
+          functionName: 'name',
+        }
 
-      wrapperContracts.push(wrapperContractRestaked, wrapperContractSymbol, moduleContractName, moduleContractImage)
+        const moduleContractImage = {
+          ...moduleContract,
+          functionName: 'image',
+        }
+
+        wrapperContracts.push(wrapperContractRestaked, wrapperContractSymbol, moduleContractName, moduleContractImage)
+      }
     }
   }
 

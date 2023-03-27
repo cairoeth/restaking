@@ -7,7 +7,7 @@ export function Navbar() {
   return (
     <div className="navbar bg-base-100 z-10">
       <div className="navbar-start">
-        <Link className="btn btn-ghost normal-case text-xl text-left" href="/">Restaking</Link>
+        <Link className="btn btn-ghost normal-case text-xl text-left" href="/">Restaking.wtf</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">

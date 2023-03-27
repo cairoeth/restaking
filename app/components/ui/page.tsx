@@ -1,5 +1,5 @@
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { goerli, gnosis, optimism, scrollTestnet, polygonZkEvmTestnet } from "wagmi/chains";
+import { goerli, gnosis, optimism, scrollTestnet } from "wagmi/chains";
 import { ConnectKitProvider } from "connectkit";
 import { infuraProvider } from 'wagmi/providers/infura'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
@@ -7,6 +7,7 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { Chain } from 'wagmi'
+import { publicProvider } from 'wagmi/providers/public'
 
 export const restaking = {
   id: 690698,
@@ -23,15 +24,30 @@ export const restaking = {
   },
 } as const satisfies Chain
 
+export const polygonZkEvmTestnet = {
+  id: 1442,
+  name: 'Polygon zkEVM Testnet',
+  network: 'Polygon zkEVM Testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ethereum',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    public: { http: ['https://rpc.public.zkevm-test.net'] },
+    default: { http: ['https://rpc.public.zkevm-test.net'] },
+  },
+} as const satisfies Chain
+
 const { chains, provider, webSocketProvider } = configureChains(
   [goerli, restaking, gnosis, optimism, scrollTestnet, polygonZkEvmTestnet],
   [
     infuraProvider({ apiKey: process.env.INFURA as string, stallTimeout: 1_000 }),
-    jsonRpcProvider({
-      rpc: () => ({
-        http: `http://0.0.0.0:8545/`,
-      }),
-    }),
+    publicProvider(),
+    publicProvider(),
+    publicProvider(),
+    publicProvider(),
+    publicProvider()
   ],
 );
 
